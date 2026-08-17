@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     private fun connectMain() {
         val callback = ModuleCallback("MAIN", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_MAIN)
-        for (i in 0..200) {
+        for (i in 0..300) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..200) {
             connection.addCallback(callback, i)
         }
-        for (i in 1000..1036) {
+        for (i in 1000..1099) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
     private fun connectAmp() {
         val callback = ModuleCallback("AMP", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_AMP)
-        for (i in 0..50) {
+        for (i in 0..200) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
     private fun connectObd() {
         val callback = ModuleCallback("OBD", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_OBD)
-        for (i in 0..50) {
+        for (i in 0..200) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
