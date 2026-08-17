@@ -23,7 +23,9 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-        logMsg("Module: $name Code: $updateCode Ints: ${intArray != null ? Arrays.toString(intArray) : 'null'} Strs: ${strArray != null Arrays.toString(strArray) : 'null'}")
+        logMsg(
+            "Module: $name Code: $updateCode Ints: ${if (intArray != null) Arrays.toString(intArray) else "null"} Strs: ${if (strArray != null) Arrays.toString(strArray) else "null"}"
+        )
     }
 
     init {
