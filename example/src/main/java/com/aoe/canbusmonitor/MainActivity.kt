@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun connectMain() {
-        val callback = ModuleCallback("Main", findViewById(R.id.text_view))
+        val callback = ModuleCallback("MAIN", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_MAIN)
         for (i in 0..119) {
             connection.addCallback(callback, i)
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun connectCanbus() {
-        val callback = ModuleCallback("Canbus", findViewById(R.id.text_view))
+        val callback = ModuleCallback("CANBUS", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_CANBUS)
         for (i in 0..50) {
             connection.addCallback(callback, i)
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun connectAmp() {
-        val callback = ModuleCallback("Amp", findViewById(R.id.text_view))
+        val callback = ModuleCallback("AMP", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_AMP)
         for (i in 0..49) {
             connection.addCallback(callback, i)
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun connectObd() {
-        val callback = ModuleCallback("CanUp", findViewById(R.id.text_view))
+        val callback = ModuleCallback("OBD", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_OBD)
         connection.addCallback(callback, 100)
         MsToolkitConnection.instance.addObserver(connection)
