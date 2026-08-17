@@ -32,6 +32,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
       - name: Build debug APK
         run: ./gradlew :example:assembleDebug --no-daemon
 
@@ -45,6 +48,7 @@ jobs:
       - name: Build unsigned release APK
         if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release-unsigned-and-debug'
         run: ./gradlew :example:assembleRelease --no-daemon
+
       - name: Upload unsigned release APK artifact (example)
         if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release-unsigned-and-debug'
         uses: actions/upload-artifact@v4
