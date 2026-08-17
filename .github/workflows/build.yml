@@ -33,14 +33,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build debug APK
-        run: ./gradlew :app:assembleDebug :example:assembleDebug --no-daemon
-
-      - name: Upload debug APK artifact (app)
-        uses: actions/upload-artifact@v4
-        with:
-          name: canbusmonitor-app-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
-          if-no-files-found: error
+        run: ./gradlew :example:assembleDebug --no-daemon
 
       - name: Upload debug APK artifact (example)
         uses: actions/upload-artifact@v4
@@ -51,16 +44,7 @@ jobs:
 
       - name: Build unsigned release APK
         if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release-unsigned-and-debug'
-        run: ./gradlew :app:assembleRelease :example:assembleRelease --no-daemon
-
-      - name: Upload unsigned release APK artifact (app)
-        if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release-unsigned-and-debug'
-        uses: actions/upload-artifact@v4
-        with:
-          name: canbusmonitor-app-release-unsigned-apk
-          path: app/build/outputs/apk/release/*.apk
-          if-no-files-found: error
-
+        run: ./gradlew :example:assembleRelease --no-daemon
       - name: Upload unsigned release APK artifact (example)
         if: github.event_name == 'workflow_dispatch' && inputs.build_type == 'release-unsigned-and-debug'
         uses: actions/upload-artifact@v4
