@@ -32,6 +32,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Create github.properties
+        run: |
+          cat <<EOF > github.properties
+          gpr.usr=${{ secrets.GPR_USER }}
+          gpr.key=${{ secrets.GPR_KEY }}
+          EOF
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
