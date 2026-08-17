@@ -89,11 +89,10 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                 })
             }
             if (ostrm != null) {
-                Log.i('ModuleLogger', msg)
                 ostrm!!.write((msg + "\n").toByteArray())
                 ostrm!!.flush()
             }
-            /*Log.i("UPDATE", msg)*/
+            Log.i("MODULE_LOGGER", msg)
         }
     }
 }
