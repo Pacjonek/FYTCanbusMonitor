@@ -29,7 +29,7 @@ val combined: List<Any?> = listOfNotNull(
     strArray?.toList()
 ).flatten()
 
-val values = combined.joinToString(separator = ", ", prefixstrArray = "[", postfix = "]")
+val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]")
         logMsg(
             "$name: $updateCode: $values"
         )
