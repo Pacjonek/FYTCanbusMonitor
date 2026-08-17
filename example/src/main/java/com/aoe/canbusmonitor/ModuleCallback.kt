@@ -22,7 +22,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-        logMsg("Module: $name Code: $updateCode Ints: ${intArray!![0]}")
+        logMsg("Module: $name Code: $updateCode Ints: ${Arrays.toString(intArray!!)} Strs: ${Arrays.toString(strArray!!)}")
     }
 
     init {
