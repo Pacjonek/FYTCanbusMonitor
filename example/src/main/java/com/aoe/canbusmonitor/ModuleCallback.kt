@@ -23,8 +23,15 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
+val combined: List<Any> = listOfNotNull(
+    intArray?.toList(),
+    floatArray?.toList(),
+    strArray?.toList()
+).flatten()
+
+val val = combined.joinToString(separator = ", ", prefixstrArray = "[", postfix = "]")
         logMsg(
-            "$name: $updateCode command:\n  ints: ${if (intArray != null) Arrays.toString(intArray) else "null"}\n  strs: ${if (strArray != null) Arrays.toString(strArray) else "null"}\n  floats: ${if (floatArray != null) Arrays.toString(floatArray) else "null"}"
+            "$name: $updateCode: $val"
         )
     }
 
@@ -32,7 +39,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         if(false) {
             Thread {
                 while (true) {
-                    logMsg("Message from $name: ${System.currentTimeMillis() / 1000}")
+                    logMsg("Arrived new message $name: ${System.currentTimeMillis() / 1000}")
                     Thread.sleep(5000L)
                 }
             }.start()
@@ -51,7 +58,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         fun init(mainAct: MainActivity) {
             act = mainAct
             view = mainAct.findViewById(R.id.text_view)
-            Log.i("TextView", "Count1: ${view?.lineCount}")
+            //Log.i("TextView", "Count1: ${view?.lineCount}")
             //view?.movementMethod = ScrollingMovementMethod()
             for (i in 1..100) {
                 lines.add("\n")
@@ -71,6 +78,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         @SuppressLint("SetTextI18n")
         @Synchronized
         private fun logMsg(msg: String) {
+            Log.i("FYT_MODULE", msg)
             if (view != null) {
                 act.runOnUiThread(Runnable {
                     lock.lock()
@@ -92,7 +100,6 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                 ostrm!!.write((msg + "\n").toByteArray())
                 ostrm!!.flush()
             }
-            Log.i("MODULE_LOGGER", msg)
         }
     }
 }
