@@ -24,7 +24,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         strArray: Array<String?>?
     ) {
         logMsg(
-            "Module: $name Code: $updateCode Ints: ${if (intArray != null) Arrays.toString(intArray) else "null"} Strs: ${if (strArray != null) Arrays.toString(strArray) else "null"}"
+            "$name: $updateCode command:\n  ints: ${if (intArray != null) Arrays.toString(intArray) else "null"}\n  strs: ${if (strArray != null) Arrays.toString(strArray) else "null"}\n  floats: ${if (floatArray != null) Arrays.toString(floatArray) else "null"}"
         )
     }
 
