@@ -78,7 +78,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                     if ((numLines == 0) and (view!!.layout != null)) {
                         val height = view!!.height
                         numLines = view!!.layout.getLineForVertical(height)
-                        Log.i("TextView", "H:$height L1:$numLines")
+                        /*Log.i("TextView", "H:$height L1:$numLines")*/
                     } else if (numLines > 0) {
                         while (lines.count() > numLines) {
                             lines.removeFirst()
@@ -89,10 +89,11 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                 })
             }
             if (ostrm != null) {
+                Log.i('ModuleLogger', msg)
                 ostrm!!.write((msg + "\n").toByteArray())
                 ostrm!!.flush()
             }
-            Log.i("UPDATE", msg)
+            /*Log.i("UPDATE", msg)*/
         }
     }
 }
