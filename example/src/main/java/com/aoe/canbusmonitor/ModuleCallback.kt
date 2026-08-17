@@ -23,7 +23,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-val combined: List<Any> = listOfNotNull(
+val combined: List<Any?> = listOfNotNull(
     intArray?.toList(),
     floatArray?.toList(),
     strArray?.toList()
