@@ -57,7 +57,9 @@ class MainActivity : AppCompatActivity() {
     private fun connectObd() {
         val callback = ModuleCallback("OBD", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_OBD)
-        connection.addCallback(callback, 100)
+        for (i in 0..50) {
+            connection.addCallback(callback, i)
+        }
         MsToolkitConnection.instance.addObserver(connection)
     }
 }
