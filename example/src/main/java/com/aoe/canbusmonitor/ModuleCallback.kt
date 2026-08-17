@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import com.aoe.fytcanbusmonitor.IModuleCallback
 import java.io.OutputStream
 import java.time.Instant
+import java.util.Arrays
 import java.util.concurrent.locks.ReentrantLock
 
 class ModuleCallback(private val name: String, private val view: TextView?) : IModuleCallback.Stub() {
