@@ -57,14 +57,15 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                 lines.add("\n")
             }
             view?.text = lines.toString()
-            val resolver = act.contentResolver
+            
+            /*val resolver = act.contentResolver
             val values = ContentValues()
             val fileName = "CanBox-" + Instant.now().toString()
             values.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
             values.put(MediaStore.MediaColumns.MIME_TYPE, "text/csv")
             values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
             val uri = resolver.insert(MediaStore.Files.getContentUri("external"), values)
-            ostrm = uri?.let { resolver.openOutputStream(it, "wt") }
+            ostrm = uri?.let { resolver.openOutputStream(it, "wt") }*/
         }
 
         @SuppressLint("SetTextI18n")
