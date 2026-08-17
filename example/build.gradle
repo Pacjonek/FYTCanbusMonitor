@@ -4,6 +4,7 @@ plugins {
 }
 
 android {
+    namespace 'com.aoe.canbusmonitor'
     compileSdk 33
 
     defaultConfig {
