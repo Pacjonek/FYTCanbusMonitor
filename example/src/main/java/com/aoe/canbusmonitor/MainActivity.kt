@@ -18,8 +18,8 @@ class MainActivity : AppCompatActivity() {
         ModuleCallback.init(this)
         connectMain()
         connectCanbus()
-        // connectObd()
-        // connectAmp()
+        /* connectObd() */
+        /* connectAmp() */
         MsToolkitConnection.instance.connect(this)
 
     }
