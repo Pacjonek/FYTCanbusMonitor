@@ -22,8 +22,12 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
+        val intBitwiseArr: IntArray? = intArray?.let { arr ->
+            IntArray(arr.size) { i -> arr[i] and 255 }
+        }
         val combined: List<Any?> = listOfNotNull(
             intArray?.toList(),
+            intBitwiseArr?.toList(),
             floatArray?.toList(),
             strArray?.toList()
         ).flatten()
