@@ -11,8 +11,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import com.aoe.fytcanbusmonitor.IModuleCallback
 import java.io.OutputStream
-import java.time.Instant
-import java.util.Arrays
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.locks.ReentrantLock
 
 class ModuleCallback(private val name: String, private val view: TextView?) : IModuleCallback.Stub() {
@@ -23,13 +22,20 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-val combined: List<Any?> = listOfNotNull(
-    intArray?.toList(),
-    floatArray?.toList(),
-    strArray?.toList()
-).flatten()
+        val combined: List<Any?> = listOfNotNull(
+            intArray?.toList(),
+            floatArray?.toList(),
+            strArray?.toList()
+        ).flatten()
 
-val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]")
+        val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]")
+        val messageKey = "$name:$updateCode"
+
+        val previousValues = lastPayloads.put(messageKey, values)
+        if (previousValues == values) {
+            return
+        }
+
         logMsg(
             "$name: $updateCode: $values"
         )
@@ -53,6 +59,7 @@ val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]"
         private var numLines = 0
         private var lines = arrayListOf<String>()
         private val lock = ReentrantLock()
+        private val lastPayloads = ConcurrentHashMap<String, String>()
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun init(mainAct: MainActivity) {
