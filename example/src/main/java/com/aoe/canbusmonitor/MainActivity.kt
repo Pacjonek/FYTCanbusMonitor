@@ -16,9 +16,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ModuleCallback.init(this)
-        connectMain()
         connectCanbus()
-        connectObd()
+        connectMain()
+        /* connectObd() */
         /* connectAmp() */
         MsToolkitConnection.instance.connect(this)
 
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..76) {
             connection.addCallback(callback, i)
         }
-        for (i in 78..200) {
+        for (i in 78..1200) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
