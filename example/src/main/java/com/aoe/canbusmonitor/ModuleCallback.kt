@@ -28,13 +28,18 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
             intBitwiseSep = "b:"
             intBitwiseArr = intArray.map { it and 255 }.toIntArray()
         }
-        val combined: List<Any?> = listOfNotNull(
-            intArray?.toList(),
-            intBitwiseSep,
-            intBitwiseArr?.toList(),
-            floatArray?.toList(),
-            strArray?.toList()
-        ).addAll()
+        
+        val combined = buildList<Any?> {
+    intArray?.forEach { add(it) }
+
+    if (intArray != null) {
+        add("b:")
+    }
+
+    intBitwiseArr?.forEach { add(it) }
+    floatArray?.forEach { add(it) }
+    strArray?.forEach { add(it) }
+}
         val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]")
         val messageKey = "$name:$updateCode"
 
