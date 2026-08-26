@@ -25,7 +25,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         var intBitwiseSep: String? = null
         var intBitwiseArr: IntArray? = null
         if(intArray != null){
-            intBitwiseSep = 'b:'
+            intBitwiseSep = "b:"
             intBitwiseArr = intArray.map { it and 255 }.toIntArray()
         }
         val combined: List<Any?> = listOfNotNull(
