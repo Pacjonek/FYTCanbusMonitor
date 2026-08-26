@@ -34,8 +34,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
             intBitwiseArr?.toList(),
             floatArray?.toList(),
             strArray?.toList()
-        ).flatten()
-
+        ).addAll()
         val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]")
         val messageKey = "$name:$updateCode"
 
