@@ -22,11 +22,15 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-        val intBitwiseArr: IntArray? = intArray?.let { arr ->
-            IntArray(arr.size) { i -> arr[i] and 255 }
+        var intBitwiseSep: String? = null
+        var intBitwiseArr: IntArray? = null
+        if(intArray != null){
+            intBitwiseSep = 'b:'
+            intBitwiseArr = intArray.map { it and 255 }.toIntArray()
         }
         val combined: List<Any?> = listOfNotNull(
             intArray?.toList(),
+            intBitwiseSep,
             intBitwiseArr?.toList(),
             floatArray?.toList(),
             strArray?.toList()
@@ -41,7 +45,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         }
 
         logMsg(
-            "$name: $updateCode: $values"
+            "$name:$updateCode: $values"
         )
     }
 
