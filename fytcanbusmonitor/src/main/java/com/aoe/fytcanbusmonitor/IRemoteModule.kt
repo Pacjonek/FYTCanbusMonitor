@@ -5,21 +5,21 @@ import android.os.*
 
 interface IRemoteModule : IInterface {
     @Throws(RemoteException::class)
-    fun cmd(i: Int, iArr: IntArray?, fArr: FloatArray?, strArr: Array<String?>?)
+    fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
 
     @Throws(RemoteException::class)
     operator fun get(
-        i: Int,
-        iArr: IntArray?,
-        fArr: FloatArray?,
-        strArr: Array<String?>?
+        getCode: Int,
+        ints: IntArray?,
+        flts: FloatArray?,
+        strs: Array<String?>?
     ): ModuleObject?
 
     @Throws(RemoteException::class)
-    fun register(iModuleCallback: IModuleCallback?, i: Int, i2: Int)
+    fun register(iModuleCallback: IModuleCallback?, updateCode: Int, updateParam: Int)
 
     @Throws(RemoteException::class)
-    fun unregister(iModuleCallback: IModuleCallback?, i: Int)
+    fun unregister(iModuleCallback: IModuleCallback?, updateCode: Int)
 
     /* loaded from: classes.dex */
     abstract class Stub : Binder(), IRemoteModule {
