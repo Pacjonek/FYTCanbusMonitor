@@ -17,31 +17,25 @@ import java.util.concurrent.locks.ReentrantLock
 class ModuleCallback(private val name: String, private val view: TextView?) : IModuleCallback.Stub() {
     @Throws(RemoteException::class)
     override fun update(
-        updateCode: Int,
+        updatedCode: Int,
         intArray: IntArray?,
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-        var intBitwiseSep: String? = null
-        var intBitwiseArr: IntArray? = null
-        if(intArray != null){
-            intBitwiseSep = "b:"
-            intBitwiseArr = IntArray(intArray.size) { i -> intArray[i] and 255 }
+        val intBitwiseArray = intArr?.let { arr ->
+            IntArray(arr.size) { arr[it] and 255 }
         }
-        
         val combined = buildList<Any?> {
-    intArray?.forEach { add(it) }
-
-    if (intArray != null) {
-        add("b:")
-    }
-
-    intBitwiseArr?.forEach { add(it) }
-    floatArray?.forEach { add(it) }
-    strArray?.forEach { add(it) }
-}
+            intArray.forEach { add(it) }
+            if (intBitwiseArray != null) {
+                add(" //b")
+                intBitwiseArray.forEach { add(it) }
+            }
+            floatArray?.forEach { add(it) }
+            strArray?.forEach { add(it) }
+        }
         val values = combined.joinToString(separator = ", ", prefix = "[", postfix = "]")
-        val messageKey = "$name:$updateCode"
+        val messageKey = "$name:$updatedCode"
 
         val previousValues = lastPayloads.put(messageKey, values)
         if (previousValues == values) {
@@ -49,12 +43,12 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         }
 
         logMsg(
-            "$name:$updateCode: $values"
+            "$name:$updatedCode: $values"
         )
     }
 
     init {
-        if(false) {
+        if (false) {
             Thread {
                 while (true) {
                     logMsg("Arrived new message $name: ${System.currentTimeMillis() / 1000}")
@@ -83,7 +77,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                 lines.add("\n")
             }
             view?.text = lines.toString()
-            
+
             /*val resolver = act.contentResolver
             val values = ContentValues()
             val fileName = "CanBox-" + Instant.now().toString()
@@ -97,7 +91,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         @SuppressLint("SetTextI18n")
         @Synchronized
         private fun logMsg(msg: String) {
-            Log.i("FYT_MODULE", msg)
+            Log.i("FYT MODULE", msg)
             if (view != null) {
                 act.runOnUiThread(Runnable {
                     lock.lock()
