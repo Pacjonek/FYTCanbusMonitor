@@ -22,11 +22,11 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-        val intBitwiseArray = intArr?.let { arr ->
+        val intBitwiseArray = intArray?.let { arr ->
             IntArray(arr.size) { arr[it] and 255 }
         }
         val combined = buildList<Any?> {
-            intArray.forEach { add(it) }
+            intArray?.forEach { add(it) }
             if (intBitwiseArray != null) {
                 add(" //b")
                 intBitwiseArray.forEach { add(it) }
