@@ -5,9 +5,8 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
-import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_OBD
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
-// import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_AMP
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 
 class MainActivity : AppCompatActivity() {
@@ -16,10 +15,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ModuleCallback.init(this)
-        connectCanbus()
         connectMain()
-        /* connectObd() */
-        /* connectAmp() */
+        connectCanbus()
+        connectBt()
         MsToolkitConnection.instance.connect(this)
 
     }
@@ -30,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         for (i in 0..76) {
             connection.addCallback(callback, i)
         }
-        for (i in 78..1200) {
+        for (i in 78..200) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
@@ -39,25 +37,22 @@ class MainActivity : AppCompatActivity() {
     private fun connectCanbus() {
         val callback = ModuleCallback("CANBUS", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_CANBUS)
-        for (i in 0..1200) {
+        for (i in 0..200) {
+            connection.addCallback(callback, i)
+        }
+        for (i in 500..600) {
+            connection.addCallback(callback, i)
+        }
+        for (i in 1000..1200) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
     }
 
-    /*private fun connectAmp() {
-        val callback = ModuleCallback("AMP", findViewById(R.id.text_view))
-        val connection = IPCConnection(MODULE_CODE_AMP)
-        for (i in 0..200) {
-            connection.addCallback(callback, i)
-        }
-        MsToolkitConnection.instance.addObserver(connection)
-    }*/
-
-    private fun connectObd() {
-        val callback = ModuleCallback("OBD", findViewById(R.id.text_view))
-        val connection = IPCConnection(MODULE_CODE_OBD)
-        for (i in 1000..1020) {
+    private fun connectBt() {
+        val callback = ModuleCallback("BT", findViewById(R.id.text_view))
+        val connection = IPCConnection(MODULE_CODE_BT)
+        for (i in 0..100) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
