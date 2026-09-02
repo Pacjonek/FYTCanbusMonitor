@@ -24,7 +24,7 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
     ) {
         val intBitwiseArray = intArray?.map { arr ->
             IntArray(arr.size) { it and 255 }
-        }.toIntArray()
+        }?.toIntArray()
         val combined = buildList<Any?> {
             intArray?.forEach { add(it) }
             if (intBitwiseArray != null) {
