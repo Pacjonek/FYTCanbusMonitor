@@ -37,13 +37,14 @@ class MainActivity : AppCompatActivity() {
     private fun connectCanbus() {
         val callback = ModuleCallback("CANBUS", findViewById(R.id.text_view))
         val connection = IPCConnection(MODULE_CODE_CANBUS)
-        for (i in 0..200) {
-            connection.addCallback(callback, i)
-        }
+        
         for (i in 500..600) {
             connection.addCallback(callback, i)
         }
         for (i in 1000..1200) {
+            connection.addCallback(callback, i)
+        }
+        for (i in 0..200) {
             connection.addCallback(callback, i)
         }
         MsToolkitConnection.instance.addObserver(connection)
