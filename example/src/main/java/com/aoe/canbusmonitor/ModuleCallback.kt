@@ -99,9 +99,9 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
                         numLines = view!!.layout.getLineForVertical(height)
                         /*Log.i("TextView", "H:$height L1:$numLines")*/
                     } else if (numLines > 0) {
-                        while (lines.count() > numLines) {
+                        /*while (lines.count() > numLines) {
                             lines.removeFirst()
-                        }
+                        }*/
                     }
                     view!!.text = lines.joinToString("")
                     lock.unlock()
