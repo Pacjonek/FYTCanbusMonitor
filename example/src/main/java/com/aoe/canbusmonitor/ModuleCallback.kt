@@ -22,9 +22,9 @@ class ModuleCallback(private val name: String, private val view: TextView?) : IM
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ) {
-        val intBitwiseArray = intArray?.let { arr ->
-            IntArray(arr.size) { arr[it] and 255 }
-        }
+        val intBitwiseArray = intArray?.map { arr ->
+            IntArray(arr.size) { it and 255 }
+        }.toIntArray()
         val combined = buildList<Any?> {
             intArray?.forEach { add(it) }
             if (intBitwiseArray != null) {
