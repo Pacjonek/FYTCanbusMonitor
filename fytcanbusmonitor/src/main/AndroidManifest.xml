@@ -6,7 +6,8 @@
         <provider
             android:name=".FytLibraryInitProvider"
             android:authorities="${applicationId}.fytcanbusmonitor-init"
-            android:exported="false" />
+            android:exported="false"
+            android:initOrder="100" />
     </application>
 
 </manifest>

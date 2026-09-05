@@ -125,7 +125,9 @@ class MainActivity : AppCompatActivity() {
             } ?: break
 
             Log.i("[FYT Module]", message)
-            val shouldAutoScroll = layoutManager.findLastVisibleItemPosition() >= logAdapter.itemCount - 2
+            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+            val shouldAutoScroll = lastVisibleItemPosition == RecyclerView.NO_POSITION ||
+                lastVisibleItemPosition >= logAdapter.itemCount - 2
             val lastIndex = logAdapter.add(message)
             if (shouldAutoScroll && lastIndex >= 0) {
                 recyclerView.scrollToPosition(lastIndex)
