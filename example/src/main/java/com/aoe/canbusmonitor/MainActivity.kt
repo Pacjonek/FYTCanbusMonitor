@@ -46,10 +46,10 @@ class MainActivity : AppCompatActivity() {
             floatArray: FloatArray?,
             strArray: Array<String?>?
         ) {
-            val intBitwiseArray = intArray?.map { it and 255 }
+            val intBitwiseArray = intArray?.map { it and 255 }?.toIntArray()
             val combined = buildList<Any?> {
                 intArray?.forEach { add(it) }
-                if (intBitwiseArray != null && intBitwiseArray != intArray.toList()) {
+                if (intBitwiseArray != null && !intBitwiseArray.contentEquals(intArray)) {
                     add(" //b")
                     intBitwiseArray.forEach { add(it) }
                 }
