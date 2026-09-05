@@ -21,6 +21,7 @@ class IPCConnection(
 ) : ConnectionObserver {
 
     private val updateCodes = updateCodes.toList()
+    private var callbacksRegistered = false
 
     init {
         MsToolkitConnection.instance.addObserver(this)
@@ -34,10 +35,14 @@ class IPCConnection(
             return
         }
         updateCodes.forEach { remoteProxy.register(callback, it, 1) }
+        callbacksRegistered = true
     }
 
     override fun onDisconnected() {
-        updateCodes.forEach { remoteProxy.unregister(callback, it) }
+        if (callbacksRegistered) {
+            updateCodes.forEach { remoteProxy.unregister(callback, it) }
+            callbacksRegistered = false
+        }
         remoteProxy.remoteModule = null
     }
 
