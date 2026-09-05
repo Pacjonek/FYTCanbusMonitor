@@ -56,8 +56,9 @@ class MainActivity : AppCompatActivity() {
         Log.i("[FYT Module]", message)
         logView.post {
             val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
+            val bottomThreshold = maxOf(contentHeight - SCROLL_BOTTOM_TOLERANCE_PX, 0)
             val shouldAutoScroll =
-                scrollView.scrollY + scrollView.height >= contentHeight - SCROLL_BOTTOM_TOLERANCE_PX
+                scrollView.scrollY + scrollView.height >= bottomThreshold
             logView.append(message + "\n")
             trimLogIfNeeded()
             if (shouldAutoScroll) {
