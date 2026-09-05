@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         connections.forEach { it.close() }
         connections.clear()
+        lastPayloads.clear()
         super.onStop()
     }
 
@@ -135,15 +136,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun drainLogQueue() {
         val wasNearBottomBeforeDrain = isNearBottom()
-        val pendingMessages = synchronized(logQueueLock) {
-            val snapshot = pendingLogMessages.toList()
-            pendingLogMessages.clear()
-            isLogDrainPosted = false
-            snapshot
-        }
-        for (message in pendingMessages) {
-            Log.i("[FYT Module]", message)
-            appendLogLine(message)
+        while (true) {
+            val pendingMessages = synchronized(logQueueLock) {
+                if (pendingLogMessages.isEmpty()) {
+                    isLogDrainPosted = false
+                    null
+                } else {
+                    pendingLogMessages.toList().also { pendingLogMessages.clear() }
+                }
+            } ?: break
+            for (message in pendingMessages) {
+                Log.i("[FYT Module]", message)
+                appendLogLine(message)
+            }
         }
         if (wasNearBottomBeforeDrain) {
             scrollView.post { scrollToBottom() }
