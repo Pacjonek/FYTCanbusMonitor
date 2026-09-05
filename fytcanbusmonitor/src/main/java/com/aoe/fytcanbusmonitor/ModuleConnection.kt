@@ -24,7 +24,8 @@ class ModuleConnection(
     private val mainHandler = Handler(Looper.getMainLooper())
     private var callbacksRegistered = false
     private val closed = AtomicBoolean(false)
-    private val connectionGeneration = AtomicInteger(0)
+    private val activeGeneration = AtomicInteger(0)
+    private val generationCounter = AtomicInteger(0)
 
     /** Binder stub hidden from clients; marshals updates onto the main thread. */
     private val callback = object : IModuleCallback.Stub() {
@@ -37,13 +38,13 @@ class ModuleConnection(
             if (closed.get()) {
                 return
             }
-            val generation = connectionGeneration.get()
+            val generation = activeGeneration.get()
             if (generation == 0) {
                 return
             }
             val update = ModuleUpdate(updatedCode, intArray, floatArray, strArray)
             mainHandler.post {
-                if (!closed.get() && connectionGeneration.get() == generation) {
+                if (!closed.get() && activeGeneration.get() == generation) {
                     onUpdate(update)
                 }
             }
@@ -65,23 +66,48 @@ class ModuleConnection(
         try {
             val remoteModule = toolkit.getRemoteModule(moduleId) ?: return
             proxy.remoteModule = remoteModule
+            val generation = generationCounter.incrementAndGet()
+            val registeredCodes = ArrayList<Int>(updateCodes.size)
+            try {
+                updateCodes.forEach {
+                    remoteModule.register(callback, it, 1)
+                    registeredCodes += it
+                }
+            } catch (e: RemoteException) {
+                e.printStackTrace()
+                registeredCodes.forEach {
+                    try {
+                        remoteModule.unregister(callback, it)
+                    } catch (ignored: RemoteException) {
+                        ignored.printStackTrace()
+                    }
+                }
+                proxy.remoteModule = null
+                return
+            }
+            activeGeneration.set(generation)
+            callbacksRegistered = true
         } catch (e: RemoteException) {
             e.printStackTrace()
             return
         }
-        connectionGeneration.incrementAndGet()
-        updateCodes.forEach { proxy.register(callback, it, 1) }
-        callbacksRegistered = true
     }
 
     @Synchronized
     override fun onDisconnected() {
+        val remoteModule = proxy.remoteModule
+        activeGeneration.set(0)
         if (callbacksRegistered) {
-            updateCodes.forEach { proxy.unregister(callback, it) }
+            updateCodes.forEach {
+                try {
+                    remoteModule?.unregister(callback, it)
+                } catch (e: RemoteException) {
+                    e.printStackTrace()
+                }
+            }
             callbacksRegistered = false
         }
         proxy.remoteModule = null
-        connectionGeneration.incrementAndGet()
     }
 
     @Synchronized
