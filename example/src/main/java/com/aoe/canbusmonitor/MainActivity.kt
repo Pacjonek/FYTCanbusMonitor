@@ -11,6 +11,7 @@ import com.aoe.fytcanbusmonitor.IModuleCallback
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CUSTOMER
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 import java.util.ArrayDeque
 import java.util.concurrent.ConcurrentHashMap
