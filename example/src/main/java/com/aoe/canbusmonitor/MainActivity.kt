@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
         connections.forEach { it.close() }
         connections.clear()
         lastPayloads.clear()
+        synchronized(logQueueLock) {
+            pendingLogMessages.clear()
+            isLogDrainPosted = false
+        }
         super.onStop()
     }
 
