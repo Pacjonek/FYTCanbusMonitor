@@ -7,4 +7,5 @@ object DataProxy {
     val canbusProxy = RemoteModuleProxy()
     val canUpProxy = RemoteModuleProxy()
     val mainProxy = RemoteModuleProxy()
+    var customerProxy = RemoteModuleProxy()
 }
