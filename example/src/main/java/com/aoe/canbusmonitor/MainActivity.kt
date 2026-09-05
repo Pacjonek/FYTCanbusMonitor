@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
 class MainActivity : AppCompatActivity() {
 
     private val lastPayloads = ConcurrentHashMap<String, String>()
+    private val moduleConnections = ArrayList<ModuleConnection>()
     private val pendingLogMessages = ArrayDeque<String>()
     private val logAdapter = LogAdapter(MAX_LOG_LINES)
     private val logQueueLock = Any()
@@ -32,20 +33,20 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = logAdapter
         logAdapter.add("Started...")
 
-        ModuleConnection(MODULE_CODE_MAIN, (0..76) + (78..200)) { update ->
+        moduleConnections += ModuleConnection(MODULE_CODE_MAIN, (0..76) + (78..200)) { update ->
             logIfChanged("MAIN", update.updateCode, formatPayloadValues(update.ints, update.floats, update.strings))
         }
-        ModuleConnection(MODULE_CODE_BT, 0..100) { update ->
+        moduleConnections += ModuleConnection(MODULE_CODE_BT, 0..100) { update ->
             logIfChanged("BT", update.updateCode, formatPayloadValues(update.ints, update.floats, update.strings))
         }
-        ModuleConnection(MODULE_CODE_CUSTOMER, 0..100) { update ->
+        moduleConnections += ModuleConnection(MODULE_CODE_CUSTOMER, 0..100) { update ->
             logIfChanged(
                 "Customer",
                 update.updateCode,
                 formatPayloadValues(update.ints, update.floats, update.strings)
             )
         }
-        ModuleConnection(
+        moduleConnections += ModuleConnection(
             MODULE_CODE_CANBUS,
             (0..200) + (500..600) + (1000..1200)
         ) { update ->
@@ -55,6 +56,12 @@ class MainActivity : AppCompatActivity() {
                 formatPayloadValues(update.ints, update.floats, update.strings)
             )
         }
+    }
+
+    override fun onDestroy() {
+        moduleConnections.forEach { it.close() }
+        moduleConnections.clear()
+        super.onDestroy()
     }
 
     private fun log(message: String) {
