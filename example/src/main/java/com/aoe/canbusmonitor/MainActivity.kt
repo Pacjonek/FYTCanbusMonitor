@@ -67,7 +67,8 @@ class MainActivity : AppCompatActivity() {
     private fun log(message: String) {
         Log.i("[FYT Module]", message)
         logView.post {
-            val atBottom = scrollView.scrollY + scrollView.height >= logView.bottom - SCROLL_BOTTOM_TOLERANCE_PX
+            val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
+            val atBottom = scrollView.scrollY + scrollView.height >= contentHeight - SCROLL_BOTTOM_TOLERANCE_PX
             logView.append(message + "\n")
             trimLogIfNeeded()
             if (atBottom) {
