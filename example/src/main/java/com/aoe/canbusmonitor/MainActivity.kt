@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
 
         IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, loggingCallback("MAIN"), (0..76) + (78..200))
         IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
-        IPCConnection(MODULE_CODE_CUSTOMER, DataProxy.customerProxy, loggingCallback("Customer"), 0..100)
+        IPCConnection(MODULE_CODE_CUSTOMER, DataProxy.canUpProxy, loggingCallback("Customer"), 0..100)
         IPCConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
