@@ -46,20 +46,8 @@ class MainActivity : AppCompatActivity() {
             floatArray: FloatArray?,
             strArray: Array<String?>?
         ) {
-            val intBitwiseArray = intArray?.map { it and 255 }?.toIntArray()
-            val combined = buildList<Any?> {
-                intArray?.forEach { add(it) }
-                if (intBitwiseArray != null && !intBitwiseArray.contentEquals(intArray)) {
-                    add(" //b")
-                    intBitwiseArray.forEach { add(it) }
-                }
-                floatArray?.forEach { add(it) }
-                strArray?.forEach { add(it) }
-            }
-            val values = combined.joinToString(", ", "[", "]")
-            if (lastPayloads.put("$tag:$updatedCode", values) != values) {
-                log("$tag:$updatedCode: $values")
-            }
+            val values = formatPayloadValues(intArray, floatArray, strArray)
+            logIfChanged(tag, updatedCode, values)
         }
     }
 
@@ -68,12 +56,37 @@ class MainActivity : AppCompatActivity() {
         Log.i("[FYT Module]", message)
         logView.post {
             val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
-            val atBottom = scrollView.scrollY + scrollView.height >= contentHeight - SCROLL_BOTTOM_TOLERANCE_PX
+            val shouldAutoScroll =
+                scrollView.scrollY + scrollView.height >= contentHeight - SCROLL_BOTTOM_TOLERANCE_PX
             logView.append(message + "\n")
             trimLogIfNeeded()
-            if (atBottom) {
+            if (shouldAutoScroll) {
                 scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
             }
+        }
+    }
+
+    private fun formatPayloadValues(
+        intArray: IntArray?,
+        floatArray: FloatArray?,
+        strArray: Array<String?>?
+    ): String {
+        val intBitwiseArray = intArray?.map { it and 255 }?.toIntArray()
+        val combined = buildList<Any?> {
+            intArray?.forEach { add(it) }
+            if (intBitwiseArray != null && !intBitwiseArray.contentEquals(intArray)) {
+                add(" //b")
+                intBitwiseArray.forEach { add(it) }
+            }
+            floatArray?.forEach { add(it) }
+            strArray?.forEach { add(it) }
+        }
+        return combined.joinToString(", ", "[", "]")
+    }
+
+    private fun logIfChanged(tag: String, updatedCode: Int, values: String) {
+        if (lastPayloads.put("$tag:$updatedCode", values) != values) {
+            log("$tag:$updatedCode: $values")
         }
     }
 
