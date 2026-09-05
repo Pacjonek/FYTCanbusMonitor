@@ -31,6 +31,7 @@ class IPCConnection(
             remoteProxy.remoteModule = toolkit.getRemoteModule(moduleId)
         } catch (e: RemoteException) {
             e.printStackTrace()
+            return
         }
         updateCodes.forEach { remoteProxy.register(callback, it, 1) }
     }
