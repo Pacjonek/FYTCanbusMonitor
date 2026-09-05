@@ -114,6 +114,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun drainLogQueue() {
         val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+        val shouldAutoScroll = lastVisibleItemPosition == RecyclerView.NO_POSITION ||
+            lastVisibleItemPosition >= logAdapter.itemCount - 2
+        var lastIndex = -1
         while (true) {
             val message = synchronized(logQueueLock) {
                 if (pendingLogMessages.isEmpty()) {
@@ -125,13 +129,10 @@ class MainActivity : AppCompatActivity() {
             } ?: break
 
             Log.i("[FYT Module]", message)
-            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-            val shouldAutoScroll = lastVisibleItemPosition == RecyclerView.NO_POSITION ||
-                lastVisibleItemPosition >= logAdapter.itemCount - 2
-            val lastIndex = logAdapter.add(message)
-            if (shouldAutoScroll && lastIndex >= 0) {
-                recyclerView.scrollToPosition(lastIndex)
-            }
+            lastIndex = logAdapter.add(message)
+        }
+        if (shouldAutoScroll && lastIndex >= 0) {
+            recyclerView.scrollToPosition(lastIndex)
         }
     }
 

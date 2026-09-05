@@ -31,6 +31,13 @@ class ModuleConnection(
     init {
         MsToolkitConnection.instance.addObserver(this)
         FytLibrary.context?.let { MsToolkitConnection.instance.connect(it) }
+        MsToolkitConnection.instance.remoteToolkit?.let { toolkit ->
+            mainHandler.post {
+                if (!callbacksRegistered) {
+                    onConnected(toolkit)
+                }
+            }
+        }
     }
 
     override fun onConnected(toolkit: IRemoteToolkit) {
