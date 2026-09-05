@@ -84,6 +84,7 @@ class ModuleConnection(
             }
             proxy.remoteModule = remoteModule
             val generation = generationCounter.incrementAndGet()
+            activeGeneration.set(generation)
             val registeredCodes = ArrayList<Int>(updateCodes.size)
             try {
                 updateCodes.forEach {
@@ -95,7 +96,6 @@ class ModuleConnection(
                 clearConnection(remoteModule, registeredCodes)
                 return
             }
-            activeGeneration.set(generation)
             callbacksRegistered = true
         } catch (e: RemoteException) {
             e.printStackTrace()
