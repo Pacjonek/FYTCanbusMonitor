@@ -58,9 +58,8 @@ class MainActivity : AppCompatActivity() {
         Log.i("[FYT Module]", message)
         logView.post {
             val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
-            val bottomThreshold = maxOf(contentHeight - SCROLL_BOTTOM_TOLERANCE_PX, 0)
-            val wasNearBottom =
-                scrollView.scrollY + scrollView.height >= bottomThreshold
+            val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
+            val wasNearBottom = distanceFromBottom <= SCROLL_BOTTOM_TOLERANCE_PX
             logView.append(message + "\n")
             logLineCount++
             trimLogIfNeeded()
@@ -93,7 +92,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logIfChanged(tag: String, updatedCode: Int, values: String) {
-        if (lastPayloads.put("$tag:$updatedCode", values) != values) {
+        val messageKey = "$tag:$updatedCode"
+        var shouldLog = false
+        lastPayloads.compute(messageKey) { _, previousValues ->
+            shouldLog = previousValues != values
+            values
+        }
+        if (shouldLog) {
             log("$tag:$updatedCode: $values")
         }
     }
