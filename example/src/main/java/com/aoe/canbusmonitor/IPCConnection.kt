@@ -2,6 +2,7 @@ package com.aoe.canbusmonitor
 
 import android.os.RemoteException
 import com.aoe.fytcanbusmonitor.ConnectionObserver
+import com.aoe.fytcanbusmonitor.IModuleCallback
 import com.aoe.fytcanbusmonitor.IRemoteToolkit
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 import com.aoe.fytcanbusmonitor.RemoteModuleProxy
@@ -16,7 +17,7 @@ import com.aoe.fytcanbusmonitor.RemoteModuleProxy
 class IPCConnection(
     private val moduleId: Int,
     private val remoteProxy: RemoteModuleProxy,
-    private val callback: ModuleCallback,
+    private val callback: IModuleCallback,
     updateCodes: Iterable<Int>
 ) : ConnectionObserver {
 
