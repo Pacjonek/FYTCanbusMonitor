@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val lastPayloads = ConcurrentHashMap<String, String>()
     private lateinit var logView: TextView
     private lateinit var scrollView: ScrollView
+    private var logLineCount = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         scrollView = findViewById(R.id.scroll_view)
         logView = findViewById(R.id.text_view)
         logView.text = "Started...\n"
+        logLineCount = 1
 
         IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, loggingCallback("MAIN"), (0..76) + (78..200))
         IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
@@ -57,11 +59,12 @@ class MainActivity : AppCompatActivity() {
         logView.post {
             val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
             val bottomThreshold = maxOf(contentHeight - SCROLL_BOTTOM_TOLERANCE_PX, 0)
-            val shouldAutoScroll =
+            val wasNearBottom =
                 scrollView.scrollY + scrollView.height >= bottomThreshold
             logView.append(message + "\n")
+            logLineCount++
             trimLogIfNeeded()
-            if (shouldAutoScroll) {
+            if (wasNearBottom) {
                 scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
             }
         }
@@ -72,10 +75,14 @@ class MainActivity : AppCompatActivity() {
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ): String {
-        val intBitwiseArray = intArray?.map { it and 255 }?.toIntArray()
+        val intBitwiseArray = if (intArray?.any { it != (it and 255) } == true) {
+            intArray.map { it and 255 }.toIntArray()
+        } else {
+            null
+        }
         val combined = buildList<Any?> {
             intArray?.forEach { add(it) }
-            if (intBitwiseArray != null && !intBitwiseArray.contentEquals(intArray)) {
+            if (intBitwiseArray != null) {
                 add(" //b")
                 intBitwiseArray.forEach { add(it) }
             }
@@ -92,20 +99,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun trimLogIfNeeded() {
+        if (logLineCount <= MAX_LOG_LINES) {
+            return
+        }
         val text = logView.text
-        var newlineCount = 0
-        var index = text.length - 1
-        while (index >= 0) {
+        var linesToTrim = logLineCount - MAX_LOG_LINES
+        var index = 0
+        while (index < text.length && linesToTrim > 0) {
             if (text[index] == '\n') {
-                newlineCount++
-                if (newlineCount > MAX_LOG_LINES) {
-                    break
+                linesToTrim--
+                if (linesToTrim == 0) {
+                    index++
                 }
             }
-            index--
+            if (linesToTrim > 0) {
+                index++
+            }
         }
         if (index > 0) {
-            logView.text = text.subSequence(index + 1, text.length)
+            logView.text = text.subSequence(index, text.length)
+            logLineCount = MAX_LOG_LINES
         }
     }
 
