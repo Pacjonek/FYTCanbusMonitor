@@ -133,29 +133,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun drainLogQueue() {
         val wasNearBottomBeforeDrain = isNearBottom()
-        while (true) {
-            val message = synchronized(logQueueLock) {
-                if (pendingLogMessages.isEmpty()) {
-                    null
-                } else {
-                    pendingLogMessages.removeFirst()
-                }
-            } ?: break
-
+        val pendingMessages = synchronized(logQueueLock) {
+            val snapshot = pendingLogMessages.toList()
+            pendingLogMessages.clear()
+            isLogDrainPosted = false
+            snapshot
+        }
+        for (message in pendingMessages) {
             Log.i("[FYT Module]", message)
             appendLogLine(message)
-        }
-        val shouldPostDrainAgain = synchronized(logQueueLock) {
-            if (pendingLogMessages.isEmpty()) {
-                isLogDrainPosted = false
-                false
-            } else {
-                true
-            }
-        }
-        if (shouldPostDrainAgain) {
-            logView.post { drainLogQueue() }
-            return
         }
         if (wasNearBottomBeforeDrain) {
             scrollView.post { scrollToBottom() }
