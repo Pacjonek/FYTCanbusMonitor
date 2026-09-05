@@ -3,6 +3,8 @@ package com.aoe.fytcanbusmonitor
 import android.os.Handler
 import android.os.Looper
 import android.os.RemoteException
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Connects [proxy] to the remote FYT module [moduleId] and delivers updates
@@ -21,6 +23,8 @@ class ModuleConnection(
     private val updateCodes = updateCodes.toList()
     private val mainHandler = Handler(Looper.getMainLooper())
     private var callbacksRegistered = false
+    private val closed = AtomicBoolean(false)
+    private val connectionGeneration = AtomicInteger(0)
 
     /** Binder stub hidden from clients; marshals updates onto the main thread. */
     private val callback = object : IModuleCallback.Stub() {
@@ -30,8 +34,19 @@ class ModuleConnection(
             floatArray: FloatArray?,
             strArray: Array<String?>?
         ) {
+            if (closed.get()) {
+                return
+            }
+            val generation = connectionGeneration.get()
+            if (generation == 0) {
+                return
+            }
             val update = ModuleUpdate(updatedCode, intArray, floatArray, strArray)
-            mainHandler.post { onUpdate(update) }
+            mainHandler.post {
+                if (!closed.get() && connectionGeneration.get() == generation) {
+                    onUpdate(update)
+                }
+            }
         }
     }
 
@@ -41,15 +56,20 @@ class ModuleConnection(
 
     @Synchronized
     override fun onConnected(toolkit: IRemoteToolkit) {
+        if (closed.get()) {
+            return
+        }
         if (callbacksRegistered) {
             onDisconnected()
         }
         try {
-            proxy.remoteModule = toolkit.getRemoteModule(moduleId)
+            val remoteModule = toolkit.getRemoteModule(moduleId) ?: return
+            proxy.remoteModule = remoteModule
         } catch (e: RemoteException) {
             e.printStackTrace()
             return
         }
+        connectionGeneration.incrementAndGet()
         updateCodes.forEach { proxy.register(callback, it, 1) }
         callbacksRegistered = true
     }
@@ -61,10 +81,12 @@ class ModuleConnection(
             callbacksRegistered = false
         }
         proxy.remoteModule = null
+        connectionGeneration.incrementAndGet()
     }
 
     @Synchronized
     fun close() {
+        closed.set(true)
         onDisconnected()
         MsToolkitConnection.instance.removeObserver(this)
     }
