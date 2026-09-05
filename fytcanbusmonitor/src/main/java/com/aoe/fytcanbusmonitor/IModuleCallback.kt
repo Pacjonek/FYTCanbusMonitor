@@ -2,12 +2,10 @@ package com.aoe.fytcanbusmonitor
 
 import android.os.*
 
-/* loaded from: classes.dex */
 interface IModuleCallback : IInterface {
     @Throws(RemoteException::class)
-    fun update(updateCode: Int, intArray: IntArray?, floatArray: FloatArray?, strArray: Array<String?>?)
+    fun update(updatedCode: Int, intArray: IntArray?, floatArray: FloatArray?, strArray: Array<String?>?)
 
-    /* loaded from: classes.dex */
     abstract class Stub : Binder(), IModuleCallback {
         // android.os.IInterface
         override fun asBinder(): IBinder {
@@ -24,14 +22,14 @@ interface IModuleCallback : IInterface {
             return when (code) {
                 TRANSACTION_update -> {
                     data.enforceInterface(DESCRIPTOR)
-                    val updateCode = data.readInt()
+                    val updatedCode = data.readInt()
                     val ints = data.createIntArray()
                     val flts = data.createFloatArray()
                     val strs = data.createStringArray()
-                    update(updateCode, ints, flts, strs)
+                    update(updatedCode, ints, flts, strs)
                     true
                 }
-                INTERFACE_TRANSACTION -> {
+                TRANSACTION_getDescriptor -> {
                     reply!!.writeString(DESCRIPTOR)
                     true
                 }
@@ -39,7 +37,6 @@ interface IModuleCallback : IInterface {
             }
         }
 
-        /* loaded from: classes.dex */
         private class Proxy internal constructor(private val mRemote: IBinder) : IModuleCallback {
             // android.os.IInterface
             override fun asBinder(): IBinder {
@@ -48,7 +45,7 @@ interface IModuleCallback : IInterface {
 
             @Throws(RemoteException::class)  // com.syu.ipc.IModuleCallback
             override fun update(
-                updateCode: Int,
+                updatedCode: Int,
                 intArray: IntArray?,
                 floatArray: FloatArray?,
                 strArray: Array<String?>?
@@ -56,11 +53,11 @@ interface IModuleCallback : IInterface {
                 val data = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeInt(updateCode)
+                    data.writeInt(updatedCode)
                     data.writeIntArray(intArray)
                     data.writeFloatArray(floatArray)
                     data.writeStringArray(strArray)
-                    mRemote.transact(TRANSACTION_update, data, null, 1)
+                    mRemote.transact(TRANSACTION_update, data, null, FLAG_ONEWAY)
                 } finally {
                     data.recycle()
                 }
@@ -68,9 +65,10 @@ interface IModuleCallback : IInterface {
         }
 
         companion object {
-            //private const val DESCRIPTOR = "com.aoe.canbusmonitor.IModuleCallback"
-            private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback"
+            private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback" //  "com.aoe.canbusmonitor.IModuleCallback"
             const val TRANSACTION_update = 1
+            const val TRANSACTION_getDescriptor = 1598968902;
+
             fun asInterface(obj: IBinder?): IModuleCallback? {
                 if (obj == null) {
                     return null
