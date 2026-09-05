@@ -18,6 +18,7 @@ class MsToolkitConnection private constructor() : ServiceConnection {
         private set
     private val mHandler: Handler = Handler(Looper.getMainLooper())
     private val mConnectionObservers: ArrayList<ConnectionObserver> = ArrayList()
+
     private val mRunnableConnect: Runnable = object : Runnable {
         // from class: com.syu.module.MsToolkitConnection.1
         // java.lang.Runnable
@@ -29,13 +30,16 @@ class MsToolkitConnection private constructor() : ServiceConnection {
             val intent = Intent("com.syu.ms.toolkit")
             intent.component = ComponentName("com.syu.ms", "app.ToolkitService")
             mContext?.bindService(intent, instance, 1)
-            mHandler.postDelayed(this, Random().nextInt(3000) + 1000L)
+            mHandler.postDelayed(this, Random().nextInt(WHAT_ITEM_SELECTED) + 1000L)
         }
     }
 
     companion object {
         val instance = MsToolkitConnection()
         var looper: Looper? = null
+
+        val WHAT_ITEM_SELECTED = 3000; // from com.syu.loopview.MessageHandler
+
 
         init {
             val thread = HandlerThread("ConnectionThread")
@@ -110,7 +114,7 @@ class MsToolkitConnection private constructor() : ServiceConnection {
             val observer: ConnectionObserver = it.next()
             mHandler.post(OnServiceDisconnected(this, observer, null))
         }
-        connect(mContext, Random().nextInt(3000) + 1000L)
+        connect(mContext, Random().nextInt(WHAT_ITEM_SELECTED) + 1000L)
     }
 
     /* JADX INFO: Access modifiers changed from: private */ /* loaded from: classes.dex */
@@ -138,7 +142,6 @@ class MsToolkitConnection private constructor() : ServiceConnection {
         }
     }
 
-    /* loaded from: classes.dex */
     private inner class OnServiceDisconnected private constructor(observer: ConnectionObserver?) :
 
         Runnable {
