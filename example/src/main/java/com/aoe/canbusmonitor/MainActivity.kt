@@ -20,9 +20,12 @@ class MainActivity : AppCompatActivity() {
 
     private val lastPayloads = ConcurrentHashMap<String, String>()
     private val logLines = ArrayDeque<String>()
+    private val pendingLogMessages = ArrayDeque<String>()
+    private val logQueueLock = Any()
     private val payloadLock = Any()
     private lateinit var logView: TextView
     private lateinit var scrollView: ScrollView
+    private var isLogDrainPosted = false
     private val scrollBottomTolerancePx by lazy {
         TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
@@ -66,18 +69,17 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun log(message: String) {
-        Log.i("[FYT Module]", message)
-        logView.post {
-            val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
-            val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
-            val contentFitsViewport = contentHeight <= scrollView.height
-            val incomingLineHeight = maxOf(logView.lineHeight, 0)
-            val projectedDistanceFromBottom = maxOf(distanceFromBottom - incomingLineHeight, 0)
-            val wasNearBottom = contentFitsViewport || projectedDistanceFromBottom <= scrollBottomTolerancePx
-            appendLogLine(message)
-            if (wasNearBottom) {
-                scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        val shouldPostDrain = synchronized(logQueueLock) {
+            pendingLogMessages += message
+            if (isLogDrainPosted) {
+                false
+            } else {
+                isLogDrainPosted = true
+                true
             }
+        }
+        if (shouldPostDrain) {
+            logView.post { drainLogQueue() }
         }
     }
 
@@ -111,6 +113,31 @@ class MainActivity : AppCompatActivity() {
         }
         if (shouldLog) {
             log("$tag:$updatedCode: $values")
+        }
+    }
+
+    private fun drainLogQueue() {
+        while (true) {
+            val message = synchronized(logQueueLock) {
+                if (pendingLogMessages.isEmpty()) {
+                    isLogDrainPosted = false
+                    null
+                } else {
+                    pendingLogMessages.removeFirst()
+                }
+            } ?: return
+
+            Log.i("[FYT Module]", message)
+            val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
+            val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
+            val contentFitsViewport = contentHeight <= scrollView.height
+            val incomingLineHeight = maxOf(logView.lineHeight, 0)
+            val projectedDistanceFromBottom = maxOf(distanceFromBottom - incomingLineHeight, 0)
+            val wasNearBottom = contentFitsViewport || projectedDistanceFromBottom <= scrollBottomTolerancePx
+            appendLogLine(message)
+            if (wasNearBottom) {
+                scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+            }
         }
     }
 
