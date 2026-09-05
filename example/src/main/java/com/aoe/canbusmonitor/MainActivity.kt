@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     private val payloadLock = Any()
     private lateinit var logView: TextView
     private lateinit var scrollView: ScrollView
+    private val moduleConnections = mutableListOf<ModuleConnection>()
     private var isLogDrainPosted = false
     private val scrollBottomTolerancePx by lazy {
         TypedValue.applyDimension(
@@ -44,28 +45,28 @@ class MainActivity : AppCompatActivity() {
         logLines += "Started..."
         renderLog()
 
-        ModuleConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, (0..76) + (78..200)) { update ->
+        moduleConnections += ModuleConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, (0..76) + (78..200)) { update ->
             logIfChanged(
                 "MAIN",
                 update.updateCode,
                 formatPayloadValues(update.ints, update.floats, update.strings)
             )
         }
-        ModuleConnection(MODULE_CODE_BT, DataProxy.btProxy, 0..100) { update ->
+        moduleConnections += ModuleConnection(MODULE_CODE_BT, DataProxy.btProxy, 0..100) { update ->
             logIfChanged(
                 "BT",
                 update.updateCode,
                 formatPayloadValues(update.ints, update.floats, update.strings)
             )
         }
-        ModuleConnection(MODULE_CODE_CUSTOMER, DataProxy.customerProxy, 0..100) { update ->
+        moduleConnections += ModuleConnection(MODULE_CODE_CUSTOMER, DataProxy.customerProxy, 0..100) { update ->
             logIfChanged(
                 "Customer",
                 update.updateCode,
                 formatPayloadValues(update.ints, update.floats, update.strings)
             )
         }
-        ModuleConnection(
+        moduleConnections += ModuleConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
             (0..200) + (500..600) + (1000..1200)
@@ -78,6 +79,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         MsToolkitConnection.instance.connect(this)
+    }
+
+    override fun onDestroy() {
+        moduleConnections.forEach { it.close() }
+        moduleConnections.clear()
+        super.onDestroy()
     }
 
     @SuppressLint("SetTextI18n")

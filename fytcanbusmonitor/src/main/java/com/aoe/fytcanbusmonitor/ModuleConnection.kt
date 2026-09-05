@@ -39,6 +39,7 @@ class ModuleConnection(
         MsToolkitConnection.instance.addObserver(this)
     }
 
+    @Synchronized
     override fun onConnected(toolkit: IRemoteToolkit) {
         if (callbacksRegistered) {
             onDisconnected()
@@ -53,6 +54,7 @@ class ModuleConnection(
         callbacksRegistered = true
     }
 
+    @Synchronized
     override fun onDisconnected() {
         if (callbacksRegistered) {
             updateCodes.forEach { proxy.unregister(callback, it) }
@@ -61,6 +63,7 @@ class ModuleConnection(
         proxy.remoteModule = null
     }
 
+    @Synchronized
     fun close() {
         onDisconnected()
         MsToolkitConnection.instance.removeObserver(this)
