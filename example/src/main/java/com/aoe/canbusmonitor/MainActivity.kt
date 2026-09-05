@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun connectMain() {
         val callback = ModuleCallback("MAIN", findViewById(R.id.text_view))
-        val connection = IPCConnection(MODULE_CODE_MAIN)
+        val connection = IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy)
         for (i in 0..76) {
             connection.addCallback(callback, i)
         }
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun connectCanbus() {
         val callback = ModuleCallback("CANBUS", findViewById(R.id.text_view))
-        val connection = IPCConnection(MODULE_CODE_CANBUS)
+        val connection = IPCConnection(MODULE_CODE_CANBUS, DataProxy.canbusProxy)
         
         for (i in 0..200) {
             connection.addCallback(callback, i)
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun connectBt() {
         val callback = ModuleCallback("BT", findViewById(R.id.text_view))
-        val connection = IPCConnection(MODULE_CODE_BT)
+        val connection = IPCConnection(MODULE_CODE_BT, DataProxy.btProxy)
         for (i in 0..100) {
             connection.addCallback(callback, i)
         }
