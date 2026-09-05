@@ -64,7 +64,11 @@ class ModuleConnection(
             onDisconnected()
         }
         try {
-            val remoteModule = toolkit.getRemoteModule(moduleId) ?: return
+            val remoteModule = toolkit.getRemoteModule(moduleId)
+            if (remoteModule == null) {
+                onDisconnected()
+                return
+            }
             proxy.remoteModule = remoteModule
             val generation = generationCounter.incrementAndGet()
             val registeredCodes = ArrayList<Int>(updateCodes.size)
