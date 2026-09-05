@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logView: TextView
     private lateinit var scrollView: ScrollView
     private val moduleConnections = mutableListOf<ModuleConnection>()
+    private var isActivityActive = true
     private var isLogDrainPosted = false
     private val scrollBottomTolerancePx by lazy {
         TypedValue.applyDimension(
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        isActivityActive = false
         moduleConnections.forEach { it.close() }
         moduleConnections.clear()
         super.onDestroy()
@@ -126,6 +128,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logIfChanged(tag: String, updatedCode: Int, values: String) {
+        if (!isActivityActive) {
+            return
+        }
         val messageKey = "$tag:$updatedCode"
         val shouldLog = synchronized(payloadLock) {
             val previousValues = lastPayloads.put(messageKey, values)

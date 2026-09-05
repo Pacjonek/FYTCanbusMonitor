@@ -55,6 +55,19 @@ class ModuleConnection(
         MsToolkitConnection.instance.addObserver(this)
     }
 
+    private fun clearConnection(remoteModule: IRemoteModule?, registeredCodes: Iterable<Int>) {
+        activeGeneration.set(0)
+        registeredCodes.forEach {
+            try {
+                remoteModule?.unregister(callback, it)
+            } catch (e: RemoteException) {
+                e.printStackTrace()
+            }
+        }
+        callbacksRegistered = false
+        proxy.remoteModule = null
+    }
+
     @Synchronized
     override fun onConnected(toolkit: IRemoteToolkit) {
         if (closed.get()) {
@@ -79,39 +92,21 @@ class ModuleConnection(
                 }
             } catch (e: RemoteException) {
                 e.printStackTrace()
-                registeredCodes.forEach {
-                    try {
-                        remoteModule.unregister(callback, it)
-                    } catch (ignored: RemoteException) {
-                        ignored.printStackTrace()
-                    }
-                }
-                proxy.remoteModule = null
+                clearConnection(remoteModule, registeredCodes)
                 return
             }
             activeGeneration.set(generation)
             callbacksRegistered = true
         } catch (e: RemoteException) {
             e.printStackTrace()
+            clearConnection(proxy.remoteModule, emptyList())
             return
         }
     }
 
     @Synchronized
     override fun onDisconnected() {
-        val remoteModule = proxy.remoteModule
-        activeGeneration.set(0)
-        if (callbacksRegistered) {
-            updateCodes.forEach {
-                try {
-                    remoteModule?.unregister(callback, it)
-                } catch (e: RemoteException) {
-                    e.printStackTrace()
-                }
-            }
-            callbacksRegistered = false
-        }
-        proxy.remoteModule = null
+        clearConnection(proxy.remoteModule, if (callbacksRegistered) updateCodes else emptyList())
     }
 
     @Synchronized
