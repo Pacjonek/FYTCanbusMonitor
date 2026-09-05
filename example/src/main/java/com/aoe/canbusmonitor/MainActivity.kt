@@ -105,10 +105,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun appendLogLine(message: String) {
         logLines += message
-        while (logLines.size > MAX_LOG_LINES) {
+        if (logLines.size > MAX_LOG_LINES) {
             logLines.removeFirst()
+            renderLog()
+        } else {
+            logView.append(message + "\n")
         }
-        renderLog()
     }
 
     private fun renderLog() {
