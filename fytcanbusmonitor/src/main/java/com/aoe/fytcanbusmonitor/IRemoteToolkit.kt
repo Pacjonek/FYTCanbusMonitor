@@ -5,9 +5,8 @@ import android.os.*
 
 interface IRemoteToolkit : IInterface {
     @Throws(RemoteException::class)
-    fun getRemoteModule(i: Int): IRemoteModule?
+    fun getRemoteModule(moduleId: Int): IRemoteModule?
 
-    /* loaded from: classes.dex */
     abstract class Stub : Binder(), IRemoteToolkit {
         // android.os.IInterface
         override fun asBinder(): IBinder {
@@ -29,7 +28,7 @@ interface IRemoteToolkit : IInterface {
                     reply.writeStrongBinder(getRemoteModule(moduleCode)?.asBinder())
                     true
                 }
-                INTERFACE_TRANSACTION -> {
+                TRANSACTION_getDescriptor -> {
                     reply!!.writeString(DESCRIPTOR)
                     true
                 }
@@ -37,7 +36,6 @@ interface IRemoteToolkit : IInterface {
             }
         }
 
-        /* loaded from: classes.dex */
         private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteToolkit {
             // android.os.IInterface
             override fun asBinder(): IBinder {
@@ -65,6 +63,8 @@ interface IRemoteToolkit : IInterface {
             //private const val DESCRIPTOR = "com.aoe.fytcanbusmonitor.IRemoteToolkit"
             private const val DESCRIPTOR = "com.syu.ipc.IRemoteToolkit"
             const val TRANSACTION_getRemoteModule = 1
+            const val TRANSACTION_getDescriptor = 1598968902;
+
             fun asInterface(obj: IBinder?): IRemoteToolkit? {
                 if (obj == null) {
                     return null
