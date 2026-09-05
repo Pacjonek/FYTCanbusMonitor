@@ -9,9 +9,9 @@ class IPCConnection(private val moduleId: Int) : ConnectionObserver {
     private val callbacks = arrayListOf<Pair<ModuleCallback, Int>>()
     private val remoteProxy = RemoteModuleProxy()
 
-    override fun onConnected(toolkit: IRemoteToolkit?) {
+    override fun onConnected(toolkit: IRemoteToolkit) {
         try {
-            remoteProxy.remoteModule = toolkit!!.getRemoteModule(moduleId)
+            remoteProxy.remoteModule = toolkit.getRemoteModule(moduleId)
 
         } catch (e: RemoteException) {
             e.printStackTrace()
