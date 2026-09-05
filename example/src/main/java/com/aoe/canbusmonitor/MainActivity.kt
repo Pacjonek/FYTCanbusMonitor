@@ -47,19 +47,21 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        connections += IPCConnection(
-            MODULE_CODE_MAIN,
-            DataProxy.mainProxy,
-            loggingCallback("MAIN"),
-            (0..76) + (78..200)
-        )
-        connections += IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
-        connections += IPCConnection(
-            MODULE_CODE_CANBUS,
-            DataProxy.canbusProxy,
-            loggingCallback("CANBUS"),
-            (0..200) + (500..600) + (1000..1200)
-        )
+        if (connections.isEmpty()) {
+            connections += IPCConnection(
+                MODULE_CODE_MAIN,
+                DataProxy.mainProxy,
+                loggingCallback("MAIN"),
+                (0..76) + (78..200)
+            )
+            connections += IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
+            connections += IPCConnection(
+                MODULE_CODE_CANBUS,
+                DataProxy.canbusProxy,
+                loggingCallback("CANBUS"),
+                (0..200) + (500..600) + (1000..1200)
+            )
+        }
 
         MsToolkitConnection.instance.connect(this)
     }
