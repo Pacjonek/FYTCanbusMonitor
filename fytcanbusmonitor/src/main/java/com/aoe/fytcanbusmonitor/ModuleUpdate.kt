@@ -1,6 +1,6 @@
 package com.aoe.fytcanbusmonitor
 
-data class ModuleUpdate(
+class ModuleUpdate(
     val updateCode: Int,
     val ints: IntArray?,
     val floats: FloatArray?,

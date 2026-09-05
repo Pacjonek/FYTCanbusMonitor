@@ -29,8 +29,8 @@ class ModuleConnection(
     }
 
     init {
-        FytLibrary.context?.let { MsToolkitConnection.instance.connect(it) }
         MsToolkitConnection.instance.addObserver(this)
+        FytLibrary.context?.let { MsToolkitConnection.instance.connect(it) }
     }
 
     override fun onConnected(toolkit: IRemoteToolkit) {

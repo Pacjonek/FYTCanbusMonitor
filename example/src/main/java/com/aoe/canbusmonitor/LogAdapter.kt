@@ -27,13 +27,17 @@ class LogAdapter(private val maxLines: Int) : RecyclerView.Adapter<LogAdapter.Lo
 
     /** Appends [line]; trims the oldest entry when over [maxLines]. Returns the new last index. */
     fun add(line: String): Int {
-        lines.add(line)
-        val insertedIndex = lines.size - 1
-        notifyItemInserted(insertedIndex)
-        if (lines.size > maxLines) {
+        val trimmed = lines.size == maxLines
+        if (trimmed) {
             lines.removeAt(0)
             notifyItemRemoved(0)
         }
-        return lines.size - 1
+        lines.add(line)
+        val insertedIndex = lines.size - 1
+        notifyItemInserted(insertedIndex)
+        if (trimmed) {
+            notifyItemRangeChanged(0, insertedIndex)
+        }
+        return insertedIndex
     }
 }
