@@ -20,6 +20,7 @@ class ModuleConnection(
 
     private val updateCodes = updateCodes.toList()
     private val mainHandler = Handler(Looper.getMainLooper())
+    private var callbacksRegistered = false
 
     /** Binder stub hidden from clients; marshals updates onto the main thread. */
     private val callback = object : IModuleCallback.Stub() {
@@ -39,18 +40,29 @@ class ModuleConnection(
     }
 
     override fun onConnected(toolkit: IRemoteToolkit) {
+        if (callbacksRegistered) {
+            onDisconnected()
+        }
         try {
             proxy.remoteModule = toolkit.getRemoteModule(moduleId)
         } catch (e: RemoteException) {
             e.printStackTrace()
+            return
         }
         updateCodes.forEach { proxy.register(callback, it, 1) }
+        callbacksRegistered = true
     }
 
     override fun onDisconnected() {
-        updateCodes.forEach { proxy.unregister(callback, it) }
+        if (callbacksRegistered) {
+            updateCodes.forEach { proxy.unregister(callback, it) }
+            callbacksRegistered = false
+        }
         proxy.remoteModule = null
     }
 
-    fun close() = MsToolkitConnection.instance.removeObserver(this)
+    fun close() {
+        onDisconnected()
+        MsToolkitConnection.instance.removeObserver(this)
+    }
 }
