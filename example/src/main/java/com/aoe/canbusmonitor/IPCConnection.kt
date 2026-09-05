@@ -14,10 +14,10 @@ class IPCConnection(
     override fun onConnected(toolkit: IRemoteToolkit?) {
         try {
             remoteProxy.remoteModule = toolkit?.getRemoteModule(moduleId)
-
         } catch (e: RemoteException) {
             e.printStackTrace()
         }
+        if (remoteProxy.remoteModule == null) return
         callbacks.forEach { (callback, id) -> remoteProxy.register(callback, id, 1) }
     }
 
