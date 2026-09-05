@@ -4,6 +4,7 @@ import android.os.RemoteException
 
 class RemoteModuleProxy : IRemoteModule.Stub() {
     var remoteModule: IRemoteModule? = null
+        internal set
     var moduleType = -1
 
     // com.syu.ipc.IRemoteModule

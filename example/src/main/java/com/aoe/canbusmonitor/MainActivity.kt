@@ -7,11 +7,11 @@ import android.util.TypedValue
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.aoe.fytcanbusmonitor.IModuleCallback
+import com.aoe.fytcanbusmonitor.ModuleConnection
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
-import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CUSTOMER
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 import java.util.ArrayDeque
 import java.util.concurrent.ConcurrentHashMap
@@ -44,29 +44,40 @@ class MainActivity : AppCompatActivity() {
         logLines += "Started..."
         renderLog()
 
-        IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, loggingCallback("MAIN"), (0..76) + (78..200))
-        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
-        IPCConnection(MODULE_CODE_CUSTOMER, DataProxy.customerProxy, loggingCallback("Customer"), 0..100)
-        IPCConnection(
+        ModuleConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, (0..76) + (78..200)) { update ->
+            logIfChanged(
+                "MAIN",
+                update.updateCode,
+                formatPayloadValues(update.ints, update.floats, update.strings)
+            )
+        }
+        ModuleConnection(MODULE_CODE_BT, DataProxy.btProxy, 0..100) { update ->
+            logIfChanged(
+                "BT",
+                update.updateCode,
+                formatPayloadValues(update.ints, update.floats, update.strings)
+            )
+        }
+        ModuleConnection(MODULE_CODE_CUSTOMER, DataProxy.customerProxy, 0..100) { update ->
+            logIfChanged(
+                "Customer",
+                update.updateCode,
+                formatPayloadValues(update.ints, update.floats, update.strings)
+            )
+        }
+        ModuleConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
-            loggingCallback("CANBUS"),
             (0..200) + (500..600) + (1000..1200)
-        )
+        ) { update ->
+            logIfChanged(
+                "CANBUS",
+                update.updateCode,
+                formatPayloadValues(update.ints, update.floats, update.strings)
+            )
+        }
 
         MsToolkitConnection.instance.connect(this)
-    }
-
-    private fun loggingCallback(tag: String) = object : IModuleCallback.Stub() {
-        override fun update(
-            updatedCode: Int,
-            intArray: IntArray?,
-            floatArray: FloatArray?,
-            strArray: Array<String?>?
-        ) {
-            val values = formatPayloadValues(intArray, floatArray, strArray)
-            logIfChanged(tag, updatedCode, values)
-        }
     }
 
     @SuppressLint("SetTextI18n")
