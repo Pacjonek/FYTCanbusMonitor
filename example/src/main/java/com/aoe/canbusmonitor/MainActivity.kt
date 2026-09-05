@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private val pendingLogMessages = ArrayDeque<String>()
     private val logQueueLock = Any()
     private val payloadLock = Any()
+    private val connections = mutableListOf<IPCConnection>()
     private lateinit var logView: TextView
     private lateinit var scrollView: ScrollView
     private var isLogDrainPosted = false
@@ -43,9 +44,14 @@ class MainActivity : AppCompatActivity() {
         logLines += "Started..."
         renderLog()
 
-        IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, loggingCallback("MAIN"), (0..76) + (78..200))
-        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
-        IPCConnection(
+        connections += IPCConnection(
+            MODULE_CODE_MAIN,
+            DataProxy.mainProxy,
+            loggingCallback("MAIN"),
+            (0..76) + (78..200)
+        )
+        connections += IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
+        connections += IPCConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
             loggingCallback("CANBUS"),
@@ -53,6 +59,12 @@ class MainActivity : AppCompatActivity() {
         )
 
         MsToolkitConnection.instance.connect(this)
+    }
+
+    override fun onDestroy() {
+        connections.forEach { it.close() }
+        connections.clear()
+        super.onDestroy()
     }
 
     private fun loggingCallback(tag: String) = object : IModuleCallback.Stub() {
@@ -121,7 +133,6 @@ class MainActivity : AppCompatActivity() {
         while (true) {
             val message = synchronized(logQueueLock) {
                 if (pendingLogMessages.isEmpty()) {
-                    isLogDrainPosted = false
                     null
                 } else {
                     pendingLogMessages.removeFirst()
@@ -130,6 +141,18 @@ class MainActivity : AppCompatActivity() {
 
             Log.i("[FYT Module]", message)
             appendLogLine(message)
+        }
+        val shouldPostDrainAgain = synchronized(logQueueLock) {
+            if (pendingLogMessages.isEmpty()) {
+                isLogDrainPosted = false
+                false
+            } else {
+                true
+            }
+        }
+        if (shouldPostDrainAgain) {
+            logView.post { drainLogQueue() }
+            return
         }
         if (wasNearBottomBeforeDrain) {
             scrollView.post { scrollToBottom() }
