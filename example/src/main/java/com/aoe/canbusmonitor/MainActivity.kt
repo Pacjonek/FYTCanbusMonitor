@@ -117,10 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun drainLogQueue() {
-        val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
-        val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
-        val contentFitsViewport = contentHeight <= scrollView.height
-        val shouldScrollToBottom = contentFitsViewport || distanceFromBottom <= scrollBottomTolerancePx
+        val wasNearBottomBeforeDrain = isNearBottom()
         while (true) {
             val message = synchronized(logQueueLock) {
                 if (pendingLogMessages.isEmpty()) {
@@ -134,8 +131,8 @@ class MainActivity : AppCompatActivity() {
             Log.i("[FYT Module]", message)
             appendLogLine(message)
         }
-        if (shouldScrollToBottom) {
-            scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
+        if (wasNearBottomBeforeDrain) {
+            scrollView.post { scrollToBottom() }
         }
     }
 
@@ -155,6 +152,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderLog() {
         logView.text = logLines.joinToString(separator = "\n")
+    }
+
+    private fun isNearBottom(): Boolean {
+        val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
+        val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
+        val contentFitsViewport = contentHeight <= scrollView.height
+        return contentFitsViewport || distanceFromBottom <= scrollBottomTolerancePx
+    }
+
+    private fun scrollToBottom() {
+        scrollView.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     private companion object {
