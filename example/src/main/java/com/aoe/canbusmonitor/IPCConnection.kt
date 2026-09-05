@@ -40,5 +40,8 @@ class IPCConnection(
         remoteProxy.remoteModule = null
     }
 
-    fun close() = MsToolkitConnection.instance.removeObserver(this)
+    fun close() {
+        onDisconnected()
+        MsToolkitConnection.instance.removeObserver(this)
+    }
 }

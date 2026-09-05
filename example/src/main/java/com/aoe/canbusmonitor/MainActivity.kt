@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         val view = findViewById<TextView>(R.id.text_view)
         IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, ModuleCallback("MAIN", view), (0..76) + (78..200))
-        IPCConnection(MODULE_CODE_BT, DataProxy.canUpProxy, ModuleCallback("BT", view), 0..100)
+        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, ModuleCallback("BT", view), 0..100)
         IPCConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
