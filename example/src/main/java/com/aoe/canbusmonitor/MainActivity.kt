@@ -3,6 +3,7 @@ package com.aoe.canbusmonitor
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 import java.util.ArrayDeque
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,6 +23,13 @@ class MainActivity : AppCompatActivity() {
     private val payloadLock = Any()
     private lateinit var logView: TextView
     private lateinit var scrollView: ScrollView
+    private val scrollBottomTolerancePx by lazy {
+        TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            SCROLL_BOTTOM_TOLERANCE_DP.toFloat(),
+            resources.displayMetrics
+        ).roundToInt()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +71,9 @@ class MainActivity : AppCompatActivity() {
             val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
             val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
             val contentFitsViewport = contentHeight <= scrollView.height
-            val wasNearBottom = contentFitsViewport || distanceFromBottom <= SCROLL_BOTTOM_TOLERANCE_PX
+            val incomingLineHeight = maxOf(logView.lineHeight, 0)
+            val projectedDistanceFromBottom = maxOf(distanceFromBottom - incomingLineHeight, 0)
+            val wasNearBottom = contentFitsViewport || projectedDistanceFromBottom <= scrollBottomTolerancePx
             appendLogLine(message)
             if (wasNearBottom) {
                 scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
@@ -119,6 +130,6 @@ class MainActivity : AppCompatActivity() {
 
     private companion object {
         const val MAX_LOG_LINES = 500
-        const val SCROLL_BOTTOM_TOLERANCE_PX = 48
+        const val SCROLL_BOTTOM_TOLERANCE_DP = 48
     }
 }
