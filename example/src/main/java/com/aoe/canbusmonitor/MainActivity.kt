@@ -120,9 +120,7 @@ class MainActivity : AppCompatActivity() {
         val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
         val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
         val contentFitsViewport = contentHeight <= scrollView.height
-        val incomingLineHeight = maxOf(logView.lineHeight, 0)
-        val projectedDistanceFromBottom = maxOf(distanceFromBottom - incomingLineHeight, 0)
-        val shouldScrollToBottom = contentFitsViewport || projectedDistanceFromBottom <= scrollBottomTolerancePx
+        val shouldScrollToBottom = contentFitsViewport || distanceFromBottom <= scrollBottomTolerancePx
         while (true) {
             val message = synchronized(logQueueLock) {
                 if (pendingLogMessages.isEmpty()) {
@@ -147,12 +145,16 @@ class MainActivity : AppCompatActivity() {
             logLines.removeFirst()
             renderLog()
         } else {
-            logView.append(message + "\n")
+            if (logView.text.isEmpty()) {
+                logView.append(message)
+            } else {
+                logView.append("\n$message")
+            }
         }
     }
 
     private fun renderLog() {
-        logView.text = logLines.joinToString(separator = "\n", postfix = "\n")
+        logView.text = logLines.joinToString(separator = "\n")
     }
 
     private companion object {
