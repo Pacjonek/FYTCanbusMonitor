@@ -43,7 +43,10 @@ class MainActivity : AppCompatActivity() {
         logView = findViewById(R.id.text_view)
         logLines += "Started..."
         renderLog()
+    }
 
+    override fun onStart() {
+        super.onStart()
         connections += IPCConnection(
             MODULE_CODE_MAIN,
             DataProxy.mainProxy,
@@ -61,10 +64,10 @@ class MainActivity : AppCompatActivity() {
         MsToolkitConnection.instance.connect(this)
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
         connections.forEach { it.close() }
         connections.clear()
-        super.onDestroy()
+        super.onStop()
     }
 
     private fun loggingCallback(tag: String) = object : IModuleCallback.Stub() {
