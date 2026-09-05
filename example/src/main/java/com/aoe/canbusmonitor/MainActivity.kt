@@ -61,7 +61,8 @@ class MainActivity : AppCompatActivity() {
         logView.post {
             val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
             val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
-            val wasNearBottom = distanceFromBottom <= SCROLL_BOTTOM_TOLERANCE_PX
+            val contentFitsViewport = contentHeight <= scrollView.height
+            val wasNearBottom = contentFitsViewport || distanceFromBottom <= SCROLL_BOTTOM_TOLERANCE_PX
             appendLogLine(message)
             if (wasNearBottom) {
                 scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
