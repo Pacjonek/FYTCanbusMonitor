@@ -28,6 +28,9 @@ class IPCConnection(
     }
 
     override fun onConnected(toolkit: IRemoteToolkit) {
+        if (callbacksRegistered) {
+            onDisconnected()
+        }
         try {
             remoteProxy.remoteModule = toolkit.getRemoteModule(moduleId)
         } catch (e: RemoteException) {
