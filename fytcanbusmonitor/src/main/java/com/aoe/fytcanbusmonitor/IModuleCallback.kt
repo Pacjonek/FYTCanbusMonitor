@@ -65,7 +65,7 @@ interface IModuleCallback : IInterface {
         companion object {
             private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback" //  "com.aoe.canbusmonitor.IModuleCallback"
             const val TRANSACTION_update = 1
-            const val TRANSACTION_getDescriptor = 1598968902;
+            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
 
             fun asInterface(obj: IBinder?): IModuleCallback? {
                 if (obj == null) {
