@@ -21,14 +21,12 @@ interface IRemoteModule : IInterface {
     @Throws(RemoteException::class)
     fun unregister(iModuleCallback: IModuleCallback?, updateCode: Int)
 
-    /* loaded from: classes.dex */
     abstract class Stub : Binder(), IRemoteModule {
-        // android.os.IInterface
         override fun asBinder(): IBinder {
             return this
         }
 
-        @Throws(RemoteException::class)  // android.os.Binder
+        @Throws(RemoteException::class)
         public override fun onTransact(
             code: Int,
             data: Parcel,
@@ -88,14 +86,12 @@ interface IRemoteModule : IInterface {
             }
         }
 
-        /* loaded from: classes.dex */
         private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteModule {
-            // android.os.IInterface
             override fun asBinder(): IBinder {
                 return mRemote
             }
 
-            @Throws(RemoteException::class)  // com.syu.ipc.IRemoteModule
+            @Throws(RemoteException::class)
             override fun cmd(
                 cmdCode: Int,
                 ints: IntArray?,
@@ -110,7 +106,7 @@ interface IRemoteModule : IInterface {
                     data.writeIntArray(ints)
                     data.writeFloatArray(flts)
                     data.writeStringArray(strs)
-                    mRemote.transact(TRANSACTION_cmd, data, reply, 1)
+                    mRemote.transact(TRANSACTION_cmd, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -118,7 +114,7 @@ interface IRemoteModule : IInterface {
                 }
             }
 
-            @Throws(RemoteException::class)  // com.syu.ipc.IRemoteModule
+            @Throws(RemoteException::class)
             override fun get(
                 getCode: Int,
                 ints: IntArray?,
@@ -151,7 +147,7 @@ interface IRemoteModule : IInterface {
                 }
             }
 
-            @Throws(RemoteException::class)  // com.syu.ipc.IRemoteModule
+            @Throws(RemoteException::class)
             override fun register(callback: IModuleCallback?, updateCode: Int, update: Int) {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
@@ -160,7 +156,7 @@ interface IRemoteModule : IInterface {
                     data.writeStrongBinder(if (callback != null) callback.asBinder() else null)
                     data.writeInt(updateCode)
                     data.writeInt(update)
-                    mRemote.transact(TRANSACTION_register, data, reply, 1)
+                    mRemote.transact(TRANSACTION_register, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -168,7 +164,7 @@ interface IRemoteModule : IInterface {
                 }
             }
 
-            @Throws(RemoteException::class)  // com.syu.ipc.IRemoteModule
+            @Throws(RemoteException::class)
             override fun unregister(callback: IModuleCallback?, updateCode: Int) {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
@@ -176,7 +172,7 @@ interface IRemoteModule : IInterface {
                     data.writeInterfaceToken(DESCRIPTOR)
                     data.writeStrongBinder(if (callback != null) callback.asBinder() else null)
                     data.writeInt(updateCode)
-                    mRemote.transact(TRANSACTION_unregister, data, reply, 1)
+                    mRemote.transact(TRANSACTION_unregister, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -186,8 +182,7 @@ interface IRemoteModule : IInterface {
         }
 
         companion object {
-            //private const val DESCRIPTOR = "com.aoe.fytcanbusmonitor.IRemoteModule"
-            private const val DESCRIPTOR = "com.syu.ipc.IRemoteModule"
+            private const val DESCRIPTOR = "com.syu.ipc.IRemoteModule" // "com.aoe.fytcanbusmonitor.IRemoteModule"
             const val TRANSACTION_cmd = 1
             const val TRANSACTION_get = 2
             const val TRANSACTION_register = 3
