@@ -6,7 +6,6 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     var remoteModule: IRemoteModule? = null
     var moduleType = -1
 
-    // com.syu.ipc.IRemoteModule
     override fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
         val remoteModule = remoteModule
         if (remoteModule != null) {
@@ -51,7 +50,6 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         }
     }
 
-    // com.syu.ipc.IRemoteModule
     override fun get(
         getCode: Int,
         ints: IntArray?,
@@ -126,7 +124,6 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         } else null
     }
 
-    // com.syu.ipc.IRemoteModule
     override fun register(callback: IModuleCallback?, updateCode: Int, update: Int) {
         val remoteModule = remoteModule
         if (remoteModule != null) {
@@ -138,7 +135,6 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         }
     }
 
-    // com.syu.ipc.IRemoteModule
     override fun unregister(callback: IModuleCallback?, updateCode: Int) {
         val remoteModule = remoteModule
         if (remoteModule != null) {
