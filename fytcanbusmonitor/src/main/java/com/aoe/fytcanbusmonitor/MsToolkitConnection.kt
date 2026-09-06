@@ -21,7 +21,6 @@ class MsToolkitConnection private constructor() : ServiceConnection {
 
     private val mRunnableConnect: Runnable = object : Runnable {
         // from class: com.syu.module.MsToolkitConnection.1
-        // java.lang.Runnable
         override fun run() {
             if (remoteToolkit != null) {
                 mConnecting = false
@@ -30,16 +29,13 @@ class MsToolkitConnection private constructor() : ServiceConnection {
             val intent = Intent("com.syu.ms.toolkit")
             intent.component = ComponentName("com.syu.ms", "app.ToolkitService")
             mContext?.bindService(intent, instance, 1)
-            mHandler.postDelayed(this, Random().nextInt(WHAT_ITEM_SELECTED) + 1000L)
+            mHandler.postDelayed(this, Random().nextInt(3000 /*from com.syu.loopview.MessageHandler*/) + 1000L)
         }
     }
 
     companion object {
         val instance = MsToolkitConnection()
         var looper: Looper? = null
-
-        val WHAT_ITEM_SELECTED = 3000; // from com.syu.loopview.MessageHandler
-
 
         init {
             val thread = HandlerThread("ConnectionThread")
@@ -114,10 +110,9 @@ class MsToolkitConnection private constructor() : ServiceConnection {
             val observer: ConnectionObserver = it.next()
             mHandler.post(OnServiceDisconnected(this, observer, null))
         }
-        connect(mContext, Random().nextInt(WHAT_ITEM_SELECTED) + 1000L)
+        connect(mContext, Random().nextInt(3000 /*from com.syu.loopview.MessageHandler*/) + 1000L)
     }
 
-    /* JADX INFO: Access modifiers changed from: private */ /* loaded from: classes.dex */
     inner class OnServiceConnected private constructor(observer: ConnectionObserver) : Runnable {
         private val observer: ConnectionObserver?
 
@@ -129,7 +124,6 @@ class MsToolkitConnection private constructor() : ServiceConnection {
         ) : this(connectionObserver) {
         }
 
-        // java.lang.Runnable
         override fun run() {
             val toolkit = remoteToolkit
             if (toolkit != null && observer != null) {
@@ -155,7 +149,6 @@ class MsToolkitConnection private constructor() : ServiceConnection {
         ) : this(connectionObserver) {
         }
 
-        // java.lang.Runnable
         override fun run() {
             if (observer != null) {
                 observer.onDisconnected()
