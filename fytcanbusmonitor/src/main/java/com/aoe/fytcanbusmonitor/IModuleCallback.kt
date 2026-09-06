@@ -7,7 +7,6 @@ interface IModuleCallback : IInterface {
     fun update(updatedCode: Int, intArray: IntArray?, floatArray: FloatArray?, strArray: Array<String?>?)
 
     abstract class Stub : Binder(), IModuleCallback {
-        // android.os.IInterface
         override fun asBinder(): IBinder {
             return this
         }
@@ -38,7 +37,6 @@ interface IModuleCallback : IInterface {
         }
 
         private class Proxy internal constructor(private val mRemote: IBinder) : IModuleCallback {
-            // android.os.IInterface
             override fun asBinder(): IBinder {
                 return mRemote
             }
