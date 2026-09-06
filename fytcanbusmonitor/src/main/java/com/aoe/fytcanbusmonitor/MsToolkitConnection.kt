@@ -5,158 +5,89 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Handler
-import android.os.HandlerThread
 import android.os.IBinder
 import android.os.Looper
-import java.util.*
+import java.util.Random
 
-
+/**
+ * Singleton [ServiceConnection] that maintains a connection to the FYT
+ * toolkit service (`com.syu.ms`) and notifies [ConnectionObserver]s.
+ * All observer callbacks are delivered on the main thread.
+ */
 class MsToolkitConnection private constructor() : ServiceConnection {
-    private var mConnecting = false
-    private var mContext: Context? = null
+
     var remoteToolkit: IRemoteToolkit? = null
         private set
-    private val mHandler: Handler = Handler(Looper.getMainLooper())
-    private val mConnectionObservers: ArrayList<ConnectionObserver> = ArrayList()
 
-    private val mRunnableConnect: Runnable = object : Runnable {
-        // from class: com.syu.module.MsToolkitConnection.1
+    private var context: Context? = null
+    private var connecting = false
+    private val handler = Handler(Looper.getMainLooper())
+    private val observers = ArrayList<ConnectionObserver>()
+
+    private val reconnectRunnable = object : Runnable {
         override fun run() {
             if (remoteToolkit != null) {
-                mConnecting = false
+                connecting = false
                 return
             }
-            val intent = Intent("com.syu.ms.toolkit")
-            intent.component = ComponentName("com.syu.ms", "app.ToolkitService")
-            mContext?.bindService(intent, instance, 1)
-            mHandler.postDelayed(this, Random().nextInt(3000 /*from com.syu.loopview.MessageHandler*/) + 1000L)
-        }
-    }
-
-    companion object {
-        val instance = MsToolkitConnection()
-        var looper: Looper? = null
-
-        init {
-            val thread = HandlerThread("ConnectionThread")
-            thread.start()
-            looper = thread.looper
+            val intent = Intent(TOOLKIT_ACTION).setComponent(TOOLKIT_COMPONENT)
+            context?.bindService(intent, this@MsToolkitConnection, Context.BIND_AUTO_CREATE)
+            handler.postDelayed(this, nextReconnectDelay())
         }
     }
 
     @Synchronized
-    fun connect(context: Context?) {
-        connect(context, 0L)
-    }
+    fun connect(context: Context?) = connect(context, 0L)
 
     private fun connect(context: Context?, delayMillis: Long) {
-        if (!mConnecting && remoteToolkit == null && context != null) {
-            mContext = context.applicationContext
-            mConnecting = true
-            mHandler.postDelayed(mRunnableConnect, delayMillis)
-        }
+        if (connecting || remoteToolkit != null || context == null) return
+        this.context = context.applicationContext
+        connecting = true
+        handler.postDelayed(reconnectRunnable, delayMillis)
     }
 
     @Synchronized
-    fun addObserver(observer: ConnectionObserver?) {
-        if (observer != null) {
-            if (!mConnectionObservers.contains(observer)) {
-                mConnectionObservers.add(observer)
-                if (remoteToolkit != null) {
-                    mHandler.post(OnServiceConnected(this, observer, null))
-                }
-            }
-        }
+    fun addObserver(observer: ConnectionObserver) {
+        if (observer in observers) return
+        observers += observer
+        remoteToolkit?.let { toolkit -> handler.post { observer.onConnected(toolkit) } }
     }
 
     @Synchronized
-    fun removeObserver(observer: ConnectionObserver?) {
-        if (observer != null) {
-            mConnectionObservers.remove(observer)
-        }
-        if (remoteToolkit != null) {
-            mHandler.post(OnServiceDisconnected(this, observer, null))
-        }
+    fun removeObserver(observer: ConnectionObserver) {
+        observers -= observer
+        if (remoteToolkit != null) handler.post { observer.onDisconnected() }
     }
 
     @Synchronized
     fun clearObservers() {
         if (remoteToolkit != null) {
-            val it: Iterator<ConnectionObserver> = mConnectionObservers.iterator()
-            while (it.hasNext()) {
-                val observer: ConnectionObserver = it.next()
-                mHandler.post(OnServiceDisconnected(this, observer, null))
-            }
+            observers.forEach { observer -> handler.post { observer.onDisconnected() } }
         }
-        mConnectionObservers.clear()
+        observers.clear()
     }
 
-
-    @Synchronized  // android.content.ServiceConnection
+    @Synchronized
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
         remoteToolkit = IRemoteToolkit.Stub.asInterface(service)
-        val it: Iterator<ConnectionObserver> = mConnectionObservers.iterator()
-        while (it.hasNext()) {
-            val observer: ConnectionObserver = it.next()
-            mHandler.post(OnServiceConnected(this, observer, null))
-        }
+        observers.forEach { observer -> handler.post { observer.onConnected(remoteToolkit) } }
     }
 
-    @Synchronized  // android.content.ServiceConnection
+    @Synchronized
     override fun onServiceDisconnected(name: ComponentName) {
         remoteToolkit = null
-        val it: Iterator<ConnectionObserver> = mConnectionObservers.iterator()
-        while (it.hasNext()) {
-            val observer: ConnectionObserver = it.next()
-            mHandler.post(OnServiceDisconnected(this, observer, null))
-        }
-        connect(mContext, Random().nextInt(3000 /*from com.syu.loopview.MessageHandler*/) + 1000L)
+        observers.forEach { observer -> handler.post { observer.onDisconnected() } }
+        connect(context, nextReconnectDelay())
     }
 
-    inner class OnServiceConnected private constructor(observer: ConnectionObserver) : Runnable {
-        private val observer: ConnectionObserver?
+    private fun nextReconnectDelay(): Long = RECONNECT_BASE_MS + Random().nextInt(RECONNECT_JITTER_MS).toLong()
 
-        // synthetic
-        internal constructor(
-            msToolkitConnection: MsToolkitConnection?,
-            connectionObserver: ConnectionObserver,
-            onServiceConnected: OnServiceConnected?
-        ) : this(connectionObserver) {
-        }
+    companion object {
+        val instance = MsToolkitConnection()
 
-        override fun run() {
-            val toolkit = remoteToolkit
-            if (toolkit != null && observer != null) {
-                observer.onConnected(toolkit)
-            }
-        }
-
-        init {
-            this.observer = observer
-        }
-    }
-
-    private inner class OnServiceDisconnected private constructor(observer: ConnectionObserver?) :
-
-        Runnable {
-        private val observer: ConnectionObserver?
-
-        // synthetic
-        internal constructor(
-            msToolkitConnection: MsToolkitConnection?,
-            connectionObserver: ConnectionObserver?,
-            onServiceDisconnected: OnServiceDisconnected?
-        ) : this(connectionObserver) {
-        }
-
-        override fun run() {
-            if (observer != null) {
-                observer.onDisconnected()
-            }
-        }
-
-        init {
-            this.observer = observer
-        }
+        private const val TOOLKIT_ACTION = "com.syu.ms.toolkit"
+        private val TOOLKIT_COMPONENT = ComponentName("com.syu.ms", "app.ToolkitService")
+        private const val RECONNECT_BASE_MS = 1000
+        private const val RECONNECT_JITTER_MS = 3000
     }
 }
