@@ -60,16 +60,11 @@ interface IRemoteToolkit : IInterface {
         companion object {
             private const val DESCRIPTOR = "com.syu.ipc.IRemoteToolkit" // "com.aoe.fytcanbusmonitor.IRemoteToolkit"
             const val TRANSACTION_getRemoteModule = 1
-            const val TRANSACTION_getDescriptor = 1598968902;
+            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;;
 
             fun asInterface(obj: IBinder?): IRemoteToolkit? {
-                if (obj == null) {
-                    return null
-                }
-                val iin = obj.queryLocalInterface(DESCRIPTOR)
-                return if (iin != null && iin is IRemoteToolkit) {
-                    iin
-                } else Proxy(obj)
+                if (obj == null) return null
+                return obj.queryLocalInterface(DESCRIPTOR) as? IRemoteToolkit ?: Proxy(obj)
             }
         }
 
