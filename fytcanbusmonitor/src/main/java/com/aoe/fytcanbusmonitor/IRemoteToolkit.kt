@@ -8,7 +8,6 @@ interface IRemoteToolkit : IInterface {
     fun getRemoteModule(moduleId: Int): IRemoteModule?
 
     abstract class Stub : Binder(), IRemoteToolkit {
-        // android.os.IInterface
         override fun asBinder(): IBinder {
             return this
         }
@@ -37,7 +36,6 @@ interface IRemoteToolkit : IInterface {
         }
 
         private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteToolkit {
-            // android.os.IInterface
             override fun asBinder(): IBinder {
                 return mRemote
             }
@@ -60,8 +58,7 @@ interface IRemoteToolkit : IInterface {
         }
 
         companion object {
-            //private const val DESCRIPTOR = "com.aoe.fytcanbusmonitor.IRemoteToolkit"
-            private const val DESCRIPTOR = "com.syu.ipc.IRemoteToolkit"
+            private const val DESCRIPTOR = "com.syu.ipc.IRemoteToolkit" // "com.aoe.fytcanbusmonitor.IRemoteToolkit"
             const val TRANSACTION_getRemoteModule = 1
             const val TRANSACTION_getDescriptor = 1598968902;
 
