@@ -202,6 +202,27 @@ object CanbusIdCodesCodes {
     const val U_AIR_FRONT_ONLY = 92
     const val U_AIR_END = 93
 
+    /*# "Proprietary" codes, which propably depend on the car model and the canbus box model */
+    // from 94 to what ??
+
+    // 'Fiat `All` models' (whatever that means) from Hiworld canbus box
+    // (I renamed "Fieyate" to "Fiat" - the Chinese don't pay attention to typos and "WC" to "HIWORLD" conv.)
+    const U_HIWORLD_FIAT_ALL_CARINFO_BEGIN = 98;
+    const U_HIWORLD_FIAT_ALL_CARINFO_END = 110;
+    const U_FIAT_ALL_CARINFO_TRIPA_AVG_OIL = 102;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_AVG_SPEEDL = 103;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_DRIVED_TIME = 105;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_TOTAL_MILE = 104;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_AVG_OIL = 106;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_AVG_SPEEDL = 107;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_DRIVED_TIME = 109;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_TOTAL_MILE = 108;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIP_CUR_OIL = 99;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIP_DRIVENABLE_OIL = 100;
+    const U_HIWORLD_FIAT_ALL_CARINFO_TRIP_TOTAL_MILE = 101;
+
+    /*# End Section */
+
     const val U_AIR_WINDOW_ENABLE = 1001
     const val U_DOOR_WINDOW_ENABLE = 1002
     const val U_DRIVER_ON_RIGHT = 1003
