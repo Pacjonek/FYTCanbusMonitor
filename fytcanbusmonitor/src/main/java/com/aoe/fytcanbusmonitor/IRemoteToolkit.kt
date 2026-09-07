@@ -1,16 +1,27 @@
 package com.aoe.fytcanbusmonitor
 
-import android.os.*
+import android.os.Binder
+import android.os.IBinder
+import android.os.IInterface
+import android.os.Parcel
+import android.os.RemoteException
 
-
+/**
+ * Minimal replica of the FYT `com.syu.ipc.IRemoteToolkit` binder interface,
+ * exposed by com.syu.ms `app.ToolkitService` (action "com.syu.ms.toolkit").
+ */
 interface IRemoteToolkit : IInterface {
     @Throws(RemoteException::class)
     fun getRemoteModule(moduleId: Int): IRemoteModule?
 
     abstract class Stub : Binder(), IRemoteToolkit {
-        override fun asBinder(): IBinder {
-            return this
+        
+        init {
+            attachInterface(this, DESCRIPTOR)
         }
+                
+        override fun asBinder(): IBinder = this
+
 
         @Throws(RemoteException::class)  // android.os.Binder
         public override fun onTransact(
@@ -22,9 +33,9 @@ interface IRemoteToolkit : IInterface {
             return when (code) {
                 TRANSACTION_getRemoteModule   -> {
                     data.enforceInterface(DESCRIPTOR)
-                    val moduleCode = data.readInt()
+                    val moduleId = data.readInt()
                     reply!!.writeNoException()
-                    reply.writeStrongBinder(getRemoteModule(moduleCode)?.asBinder())
+                    reply.writeStrongBinder(getRemoteModule(moduleId)?.asBinder())
                     true
                 }
                 TRANSACTION_getDescriptor -> {
@@ -36,18 +47,17 @@ interface IRemoteToolkit : IInterface {
         }
 
         private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteToolkit {
-            override fun asBinder(): IBinder {
-                return mRemote
-            }
+            override fun asBinder(): IBinder = mRemote
 
-            @Throws(RemoteException::class)  // com.syu.ipc.IRemoteToolkit
-            override fun getRemoteModule(moduleCode: Int): IRemoteModule {
+
+            @Throws(RemoteException::class)
+            override fun getRemoteModule(moduleId: Int): IRemoteModule {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
                 return try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeInt(moduleCode)
-                    mRemote.transact(1, data, reply, 0)
+                    data.writeInt(moduleId)
+                    mRemote.transact(TRANSACTION_getRemoteModule, data, reply, 0)
                     reply.readException()
                     IRemoteModule.Stub.asInterface(reply.readStrongBinder())!!
                 } finally {
@@ -60,7 +70,7 @@ interface IRemoteToolkit : IInterface {
         companion object {
             private const val DESCRIPTOR = "com.syu.ipc.IRemoteToolkit" // "com.aoe.fytcanbusmonitor.IRemoteToolkit"
             const val TRANSACTION_getRemoteModule = 1
-            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;;
+            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
 
             fun asInterface(obj: IBinder?): IRemoteToolkit? {
                 if (obj == null) return null
@@ -68,8 +78,5 @@ interface IRemoteToolkit : IInterface {
             }
         }
 
-        init {
-            attachInterface(this, DESCRIPTOR)
-        }
     }
 }
