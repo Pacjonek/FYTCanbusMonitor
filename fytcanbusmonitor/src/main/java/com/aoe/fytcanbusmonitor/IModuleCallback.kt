@@ -1,31 +1,34 @@
 package com.aoe.fytcanbusmonitor
 
-import android.os.*
+import android.os.Binder
+import android.os.IBinder
+import android.os.IInterface
+import android.os.Parcel
+import android.os.RemoteException
 
+/**
+ * Minimal replica of the FYT `com.syu.ipc.IModuleCallback` binder interface.
+ * Implemented by clients that want module state updates pushed back to them.
+ */
 interface IModuleCallback : IInterface {
+
     @Throws(RemoteException::class)
-    fun update(updatedCode: Int, intArray: IntArray?, floatArray: FloatArray?, strArray: Array<String?>?)
+    fun update(updatedCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
 
     abstract class Stub : Binder(), IModuleCallback {
-        override fun asBinder(): IBinder {
-            return this
+
+        init {
+            attachInterface(this, DESCRIPTOR)
         }
 
-        @Throws(RemoteException::class)  // android.os.Binder
-        public override fun onTransact(
-            code: Int,
-            data: Parcel,
-            reply: Parcel?,
-            flags: Int
-        ): Boolean {
+        override fun asBinder(): IBinder = this
+
+        @Throws(RemoteException::class)
+        public override fun onTransact(code: Int, data: Parcel, reply: Parcel?, flags: Int): Boolean {
             return when (code) {
                 TRANSACTION_update -> {
                     data.enforceInterface(DESCRIPTOR)
-                    val updatedCode = data.readInt()
-                    val ints = data.createIntArray()
-                    val flts = data.createFloatArray()
-                    val strs = data.createStringArray()
-                    update(updatedCode, ints, flts, strs)
+                    update(data.readInt(), data.createIntArray(), data.createFloatArray(), data.createStringArray())
                     true
                 }
                 TRANSACTION_getDescriptor -> {
@@ -37,24 +40,17 @@ interface IModuleCallback : IInterface {
         }
 
         private class Proxy internal constructor(private val mRemote: IBinder) : IModuleCallback {
-            override fun asBinder(): IBinder {
-                return mRemote
-            }
+            override fun asBinder(): IBinder = mRemote
 
-            @Throws(RemoteException::class)  // com.syu.ipc.IModuleCallback
-            override fun update(
-                updatedCode: Int,
-                intArray: IntArray?,
-                floatArray: FloatArray?,
-                strArray: Array<String?>?
-            ) {
+            @Throws(RemoteException::class)
+            override fun update(updatedCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
                 val data = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
                     data.writeInt(updatedCode)
-                    data.writeIntArray(intArray)
-                    data.writeFloatArray(floatArray)
-                    data.writeStringArray(strArray)
+                    data.writeIntArray(ints)
+                    data.writeFloatArray(flts)
+                    data.writeStringArray(strs)
                     mRemote.transact(TRANSACTION_update, data, null, FLAG_ONEWAY)
                 } finally {
                     data.recycle()
@@ -63,23 +59,14 @@ interface IModuleCallback : IInterface {
         }
 
         companion object {
-            private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback" //  "com.aoe.canbusmonitor.IModuleCallback"
+            private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback"
             const val TRANSACTION_update = 1
             const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
 
             fun asInterface(obj: IBinder?): IModuleCallback? {
-                if (obj == null) {
-                    return null
-                }
-                val iin = obj.queryLocalInterface(DESCRIPTOR)
-                return if (iin != null && iin is IModuleCallback) {
-                    iin
-                } else Proxy(obj)
+                if (obj == null) return null
+                return obj.queryLocalInterface(IModuleCallback.Stub.Companion.DESCRIPTOR) as? IModuleCallback ?: Proxy(obj)
             }
-        }
-
-        init {
-            attachInterface(this, DESCRIPTOR)
         }
     }
 }
