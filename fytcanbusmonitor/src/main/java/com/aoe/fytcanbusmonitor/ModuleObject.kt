@@ -1,10 +1,10 @@
 package com.aoe.fytcanbusmonitor
 
 class ModuleObject {
-    
+
+    lateinit var flts: FloatArray
     var ints: IntArray? = null
     var strs: Array<String>? = null
-    lateinit var flts: FloatArray
 
     companion object {
         fun checkInts(obj: ModuleObject?, min: Int): Boolean =
