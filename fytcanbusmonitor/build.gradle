@@ -8,46 +8,51 @@ def getVersionName = { ->
 
 android {
     namespace = "com.aoe.fytcanbusmonitor"
-    compileSdk 33
+    compileSdk 37
 
     defaultConfig {
-        minSdk 29
         targetSdk 33
+        minSdk 33
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
+        // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        // consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '21'
     }
 }
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.1'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.core:core-ktx:1.19.0'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'com.google.android.material:material:1.14.0'
 
-     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.7.0'
 }
 
 apply plugin: 'maven-publish'
+
 def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
-def getArtifiactId = { ->
+def githubPropertiesFile = rootProject.file("github.properties")
+if (githubPropertiesFile.exists()) {
+    githubPropertiesFile.withInputStream { githubProperties.load(it) }
+}
+
+def getArtifactId = { ->
     return "fytcanbusmonitor" // Replace with library name ID
 }
 
@@ -55,9 +60,9 @@ publishing {
     publications {
         bar(MavenPublication) {
             groupId 'com.aoe' // Replace with group ID
-            artifactId getArtifiactId()
+            artifactId getArtifactId()
             version getVersionName()
-            artifact("$buildDir/outputs/aar/${getArtifiactId()}-release.aar")
+            artifact("${layout.buildDirectory.get()}/outputs/aar/${getArtifactId()}-release.aar")
         }
     }
 
@@ -77,3 +82,4 @@ publishing {
         }
     }
 }
+

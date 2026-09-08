@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import java.util.Random
 
 /**
@@ -70,7 +71,10 @@ class MsToolkitConnection private constructor() : ServiceConnection {
     @Synchronized
     override fun onServiceConnected(name: ComponentName, service: IBinder) {
         remoteToolkit = IRemoteToolkit.Stub.asInterface(service)
-        observers.forEach { observer -> handler.post { observer.onConnected(remoteToolkit) } }
+        val tool = remoteToolkit
+        if (tool != null) {
+            observers.forEach { observer -> handler.post { observer.onConnected(tool) } }
+        }
     }
 
     @Synchronized

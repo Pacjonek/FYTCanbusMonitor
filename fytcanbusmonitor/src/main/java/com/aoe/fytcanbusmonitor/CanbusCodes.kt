@@ -5,6 +5,9 @@ object CanbusCommandCodes {
     const val C_CANBUS_ID = 1000
     const val C_MISC_BEGIN = 1000
 
+    const val C_CMD_START_REQ_ADD = 100
+    const val C_CMD_SET_ADD = 101
+
     const val C_DRIVER_ON_RIGHT = 1001
     const val C_SHOW_AIR_WINDOW = 1002
     const val C_CHANGE_PANORAMA = 1003
@@ -35,15 +38,18 @@ object CanbusCommandCodes {
     const val C_CMD_TCROSS_ZH_BUTTON = 1039
     const val C_CMD_6606 = 1040
 
-    const val C_CMD_START_REQ_ADD = 100
-    const val C_CMD_SET_ADD = 101
 }
 
-object CanbusIdCodesCodes {
+object CanbusUpdateCodes {
 
     const val U_CANBUS_ID = 1000
-    const val U_MISC_BEGIN = 1000
+    const val U_CANBUS_FRAME_TO_UI = 1019
 
+
+    /**
+     * # Basic
+     * It should be supported by every canbox
+     */
     const val U_DOOR_BEGIN = 0
     const val U_DOOR_ENGINE = 0
     const val U_DOOR_FL = 1
@@ -53,69 +59,9 @@ object CanbusIdCodesCodes {
     const val U_DOOR_BACK = 5
     const val U_DOOR_END = 6
 
-    const val U_CAR_ADD_START = 500
-    const val U_CAR_FRAME_NUM = 501
-    const val U_CAR_LIGHT_WIDTH = 502
-    const val U_CAR_LIGHT_NEAR = 503
-    const val U_CAR_LIGHT_FAR = 504
-    const val U_CAR_LIGHT_LEFT = 505
-    const val U_CAR_LIGHT_RIGHT = 506
-    const val U_CAR_LIGHT_FRONT = 507
-    const val U_CAR_LIGHT_REAR = 508
-    const val U_CAR_WIPER_LEV = 509
-    const val U_CAR_CUR_SPEED = 510
-    const val U_CAR_AVG_SPEED = 511
-    const val U_CAR_TOTAL_MILEAGE = 512
-    const val U_CAR_DRIVENABLE_MILEAGE = 513
-    const val U_CAR_SEAT_BELT_LEFT = 514
-    const val U_CAR_SEAT_BELT_RIGHT = 515
-    const val U_CAR_ACCON = 516
-    const val U_CAR_LIGHT = 517
-    const val U_CAR_REAR_BACK = 518
-    const val U_CAR_HANDBRAKE = 519
-    const val U_CAR_CUR_FUEL = 520
-    const val U_CAR_AVG_FUEL = 521
-    const val U_CAR_TEMP_WATER = 522
-    const val U_CAR_TEMP_MOTOR_OIL = 523
-    const val U_CAR_ENGINE_SPEED = 524
-    const val U_CAR_VOLTAGE = 525
-    const val U_CAR_LIGHT_WIDTH_ENABLE = 526
-    const val U_CAR_LIGHT_NEAR_ENABLE = 527
-    const val U_CAR_LIGHT_FAR_ENABLE = 528
-    const val U_CAR_LIGHT_LEFT_ENABLE = 529
-    const val U_CAR_LIGHT_RIGHT_ENABLE = 530
-    const val U_CAR_LIGHT_FRONT_ENABLE = 531
-    const val U_CAR_LIGHT_REAR_ENABLE = 532
-    const val U_CAR_WIPER_LEV_ENABLE = 533
-    const val U_CAR_CUR_SPEED_ENABLE = 534
-    const val U_CAR_AVG_SPEED_ENABLE = 535
-    const val U_CAR_TOTAL_MILEAGE_ENABLE = 536
-    const val U_CAR_DRIVENABLE_MILEAGE_ENABLE = 537
-    const val U_CAR_SEAT_BELT_LEFT_ENABLE = 538
-    const val U_CAR_SEAT_BELT_RIGHT_ENABLE = 539
-    const val U_CAR_ACCON_ENABLE = 540
-    const val U_CAR_LIGHT_ENABLE = 541
-    const val U_CAR_REAR_BACK_ENABLE = 542
-    const val U_CAR_HANDBRAKE_ENABLE = 543
-    const val U_CAR_CUR_FUEL_ENABLE = 544
-    const val U_CAR_AVG_FUEL_ENABLE = 545
-    const val U_CAR_TEMP_WATER_ENABLE = 546
-    const val U_CAR_TEMP_MOTOR_OIL_ENABLE = 547
-    const val U_CAR_ENGINE_SPEED_ENABLE = 548
-    const val U_CAR_VOLTAGE_ENABLE = 549
-    const val U_CAR_DOOR_ENABLE = 550
-    const val U_CAR_STEER_ANGLE_ENABLE = 551
-    const val U_CAR_TEMP_OUT_ENABLE = 552
-
-    const val U_DOOR_ENGINE_ADD = 553
-    const val U_DOOR_FL_ADD = 554
-    const val U_DOOR_FR_ADD = 555
-    const val U_DOOR_RL_ADD = 556
-    const val U_DOOR_RR_ADD = 557
-    const val U_DOOR_BACK_ADD = 558
-    const val U_SPEED_UNIT = 559
-    const val U_CAR_ADD_END = 560
-
+    /**
+     * # Air condition status
+     */
     const val U_AIR_BEGIN = 10
     const val U_AIR_POWER = 10
     const val U_AIR_AC = 11
@@ -202,26 +148,98 @@ object CanbusIdCodesCodes {
     const val U_AIR_FRONT_ONLY = 92
     const val U_AIR_END = 93
 
-    /*# "Proprietary" codes, which propably depend on the car model and the canbus box model */
-    // from 94 to what ??
+
+    /**
+    # "Proprietary" codes
+    * Can vary depends on exact selected canbox manuf./model/profile/fw ver.
+     * Usually used by `com.syu.canbus` where every "group" of cars have their own code logic
+    * Range: 94 - (theoretically) 499
+    **/
 
     // 'Fiat `All` models' (whatever that means) from Hiworld canbus box
     // (I renamed "Fieyate" to "Fiat" - the Chinese don't pay attention to typos and "WC" to "HIWORLD" conv.)
     const val U_HIWORLD_FIAT_ALL_CARINFO_BEGIN = 98
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPCURR_AVG_FUEL_COMP = 99
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPCURR_REMAIN_FUEL_DIST = 100
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPCURR_TOTAL_MILAGE = 101
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_AVG_FUEL_COMP = 102
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_AVG_SPEED = 103
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_TRAVEL_MILAGE = 104
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_TRAVEL_TIME = 105
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_AVG_FUEL_COMP = 106
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_AVG_SPEED = 107
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_TRAVEL_MILAGE = 108
+    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_TRAVEL_TIME = 109
     const val U_HIWORLD_FIAT_ALL_CARINFO_END = 110
-    const val U_FIAT_ALL_CARINFO_TRIPA_AVG_OIL = 102
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_AVG_SPEEDL = 103
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_DRIVED_TIME = 105
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPA_TOTAL_MILE = 104
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_AVG_OIL = 106
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_AVG_SPEEDL = 107
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_DRIVED_TIME = 109
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_TOTAL_MILE = 108
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIP_CUR_OIL = 99
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIP_DRIVENABLE_OIL = 100
-    const val U_HIWORLD_FIAT_ALL_CARINFO_TRIP_TOTAL_MILE = 101
+    /* # End Section */
 
-    /*# End Section */
+    /**
+     * # "Universal" codes
+     * My guess is that they are "universal" codes and that exact codes are read by non canbus apps (non `com.syu.canbus`) e.g. by DUDU UI.
+     */
+    const val U_CAR_ADD_START = 500
+    const val U_CAR_FRAME_NUM = 501
+    const val U_CAR_LIGHT_WIDTH = 502
+    const val U_CAR_LIGHT_NEAR = 503
+    const val U_CAR_LIGHT_FAR = 504
+    const val U_CAR_LIGHT_LEFT = 505
+    const val U_CAR_LIGHT_RIGHT = 506
+    const val U_CAR_LIGHT_FRONT = 507
+    const val U_CAR_LIGHT_REAR = 508
+    const val U_CAR_WIPER_LEV = 509
+    const val U_CAR_CUR_SPEED = 510
+    const val U_CAR_AVG_SPEED = 511
+    const val U_CAR_TOTAL_MILEAGE = 512
+    const val U_CAR_DRIVENABLE_MILEAGE = 513
+    const val U_CAR_SEAT_BELT_LEFT = 514
+    const val U_CAR_SEAT_BELT_RIGHT = 515
+    const val U_CAR_ACCON = 516
+    const val U_CAR_LIGHT = 517
+    const val U_CAR_REAR_BACK = 518
+    const val U_CAR_HANDBRAKE = 519
+    const val U_CAR_CUR_FUEL = 520
+    const val U_CAR_AVG_FUEL = 521
+    const val U_CAR_TEMP_WATER = 522
+    const val U_CAR_TEMP_MOTOR_OIL = 523
+    const val U_CAR_ENGINE_SPEED = 524
+    const val U_CAR_VOLTAGE = 525
+    const val U_CAR_LIGHT_WIDTH_ENABLE = 526
+    const val U_CAR_LIGHT_NEAR_ENABLE = 527
+    const val U_CAR_LIGHT_FAR_ENABLE = 528
+    const val U_CAR_LIGHT_LEFT_ENABLE = 529
+    const val U_CAR_LIGHT_RIGHT_ENABLE = 530
+    const val U_CAR_LIGHT_FRONT_ENABLE = 531
+    const val U_CAR_LIGHT_REAR_ENABLE = 532
+    const val U_CAR_WIPER_LEV_ENABLE = 533
+    const val U_CAR_CUR_SPEED_ENABLE = 534
+    const val U_CAR_AVG_SPEED_ENABLE = 535
+    const val U_CAR_TOTAL_MILEAGE_ENABLE = 536
+    const val U_CAR_DRIVENABLE_MILEAGE_ENABLE = 537
+    const val U_CAR_SEAT_BELT_LEFT_ENABLE = 538
+    const val U_CAR_SEAT_BELT_RIGHT_ENABLE = 539
+    const val U_CAR_ACCON_ENABLE = 540
+    const val U_CAR_LIGHT_ENABLE = 541
+    const val U_CAR_REAR_BACK_ENABLE = 542
+    const val U_CAR_HANDBRAKE_ENABLE = 543
+    const val U_CAR_CUR_FUEL_ENABLE = 544
+    const val U_CAR_AVG_FUEL_ENABLE = 545
+    const val U_CAR_TEMP_WATER_ENABLE = 546
+    const val U_CAR_TEMP_MOTOR_OIL_ENABLE = 547
+    const val U_CAR_ENGINE_SPEED_ENABLE = 548
+    const val U_CAR_VOLTAGE_ENABLE = 549
+    const val U_CAR_DOOR_ENABLE = 550
+    const val U_CAR_STEER_ANGLE_ENABLE = 551
+    const val U_CAR_TEMP_OUT_ENABLE = 552
+    const val U_DOOR_ENGINE_ADD = 553
+    const val U_DOOR_FL_ADD = 554
+    const val U_DOOR_FR_ADD = 555
+    const val U_DOOR_RL_ADD = 556
+    const val U_DOOR_RR_ADD = 557
+    const val U_DOOR_BACK_ADD = 558
+    const val U_SPEED_UNIT = 559
+    const val U_CAR_ADD_END = 560
+
+    /* Probably a reserve for future codes (561-...) */
 
     const val U_AIR_WINDOW_ENABLE = 1001
     const val U_DOOR_WINDOW_ENABLE = 1002
@@ -241,7 +259,6 @@ object CanbusIdCodesCodes {
     const val U_EXIST_CAR_RADIO = 1016
     const val U_RIGHT_CAMERA_ON_OFF = 1017
     const val U_EXIST_AIR_CONTROL = 1018
-    const val U_CANBUS_FRAME_TO_UI = 1019
     const val U_RIGHT_CAMERA_STATE = 1020
     const val U_ORI_CARBACK = 1021
     const val U_ONSTAR_SYNC_ON = 1022
