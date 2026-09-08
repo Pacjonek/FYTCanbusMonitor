@@ -108,7 +108,7 @@ interface IRemoteModule : IInterface {
                     if (reply.readInt() != 0) {
                         ModuleObject().apply {
                             this.ints = reply.createIntArray()
-                            this.flts = reply.createFloatArray()
+                            this.flts = reply.createFloatArray()!!
                             this.strs = reply.createStringArray()
                         }
                     } else {
