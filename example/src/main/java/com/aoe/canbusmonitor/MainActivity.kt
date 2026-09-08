@@ -1,75 +1,69 @@
 package com.aoe.canbusmonitor
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
-import android.widget.ScrollView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.aoe.fytcanbusmonitor.IModuleCallback
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
-import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CUSTOMER
-import com.aoe.fytcanbusmonitor.MsToolkitConnection
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
+import com.aoe.fytcanbusmonitor.ModuleConnection
 import java.util.ArrayDeque
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
     private val lastPayloads = ConcurrentHashMap<String, String>()
-    private val logLines = ArrayDeque<String>()
+    private val moduleConnections = ArrayList<ModuleConnection>()
     private val pendingLogMessages = ArrayDeque<String>()
+    private val logAdapter = LogAdapter(MAX_LOG_LINES)
     private val logQueueLock = Any()
     private val payloadLock = Any()
-    private lateinit var logView: TextView
-    private lateinit var scrollView: ScrollView
+    private lateinit var recyclerView: RecyclerView
     private var isLogDrainPosted = false
-    private val scrollBottomTolerancePx by lazy {
-        TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            SCROLL_BOTTOM_TOLERANCE_DP.toFloat(),
-            resources.displayMetrics
-        ).roundToInt()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        scrollView = findViewById(R.id.scroll_view)
-        logView = findViewById(R.id.text_view)
-        logLines += "Started..."
-        renderLog()
+        recyclerView = findViewById(R.id.log_recycler)
+        recyclerView.layoutManager = LinearLayoutManager(this).apply { stackFromEnd = true }
+        recyclerView.adapter = logAdapter
+        logAdapter.add("Started...")
 
-        IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, loggingCallback("MAIN"), (0..76) + (78..200))
-        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..100)
-        IPCConnection(MODULE_CODE_CUSTOMER, DataProxy.customerProxy, loggingCallback("Customer"), 0..100)
-        IPCConnection(
+        moduleConnections += ModuleConnection(MODULE_CODE_MAIN, (0..76) + (78..200)) { update ->
+            logIfChanged("MAIN", update.updateCode, formatPayloadValues(update.ints, update.floats, update.strings))
+        }
+        moduleConnections += ModuleConnection(MODULE_CODE_BT, 0..100) { update ->
+            logIfChanged("BT", update.updateCode, formatPayloadValues(update.ints, update.floats, update.strings))
+        }
+        moduleConnections += ModuleConnection(MODULE_CODE_CUSTOMER, 0..100) { update ->
+            logIfChanged(
+                "Customer",
+                update.updateCode,
+                formatPayloadValues(update.ints, update.floats, update.strings)
+            )
+        }
+        moduleConnections += ModuleConnection(
             MODULE_CODE_CANBUS,
-            DataProxy.canbusProxy,
-            loggingCallback("CANBUS"),
             (0..200) + (500..600) + (1000..1200)
-        )
-
-        MsToolkitConnection.instance.connect(this)
-    }
-
-    private fun loggingCallback(tag: String) = object : IModuleCallback.Stub() {
-        override fun update(
-            updatedCode: Int,
-            intArray: IntArray?,
-            floatArray: FloatArray?,
-            strArray: Array<String?>?
-        ) {
-            val values = formatPayloadValues(intArray, floatArray, strArray)
-            logIfChanged(tag, updatedCode, values)
+        ) { update ->
+            logIfChanged(
+                "CANBUS",
+                update.updateCode,
+                formatPayloadValues(update.ints, update.floats, update.strings)
+            )
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    override fun onDestroy() {
+        moduleConnections.forEach { it.close() }
+        moduleConnections.clear()
+        super.onDestroy()
+    }
+
     private fun log(message: String) {
         val shouldPostDrain = synchronized(logQueueLock) {
             pendingLogMessages += message
@@ -81,7 +75,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         if (shouldPostDrain) {
-            logView.post { drainLogQueue() }
+            recyclerView.post { drainLogQueue() }
         }
     }
 
@@ -119,7 +113,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun drainLogQueue() {
-        val wasNearBottomBeforeDrain = isNearBottom()
+        val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+        val shouldAutoScroll = lastVisibleItemPosition == RecyclerView.NO_POSITION ||
+            lastVisibleItemPosition >= logAdapter.itemCount - 2
+        var lastIndex = -1
         while (true) {
             val message = synchronized(logQueueLock) {
                 if (pendingLogMessages.isEmpty()) {
@@ -131,44 +129,14 @@ class MainActivity : AppCompatActivity() {
             } ?: break
 
             Log.i("[FYT Module]", message)
-            appendLogLine(message)
+            lastIndex = logAdapter.add(message)
         }
-        if (wasNearBottomBeforeDrain) {
-            scrollView.post { scrollToBottom() }
+        if (shouldAutoScroll && lastIndex >= 0) {
+            recyclerView.scrollToPosition(lastIndex)
         }
-    }
-
-    private fun appendLogLine(message: String) {
-        logLines += message
-        if (logLines.size > MAX_LOG_LINES) {
-            logLines.removeFirst()
-            renderLog()
-        } else {
-            if (logView.text.isEmpty()) {
-                logView.append(message)
-            } else {
-                logView.append("\n$message")
-            }
-        }
-    }
-
-    private fun renderLog() {
-        logView.text = logLines.joinToString(separator = "\n")
-    }
-
-    private fun isNearBottom(): Boolean {
-        val contentHeight = scrollView.getChildAt(0)?.height ?: logView.height
-        val distanceFromBottom = maxOf(contentHeight - (scrollView.scrollY + scrollView.height), 0)
-        val contentFitsViewport = contentHeight <= scrollView.height
-        return contentFitsViewport || distanceFromBottom <= scrollBottomTolerancePx
-    }
-
-    private fun scrollToBottom() {
-        scrollView.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     private companion object {
         const val MAX_LOG_LINES = 500
-        const val SCROLL_BOTTOM_TOLERANCE_DP = 48
     }
 }
