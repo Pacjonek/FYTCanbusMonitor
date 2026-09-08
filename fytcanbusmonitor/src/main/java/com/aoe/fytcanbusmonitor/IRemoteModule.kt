@@ -16,7 +16,7 @@ interface IRemoteModule : IInterface {
     fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
 
     @Throws(RemoteException::class)
-    fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleObject?
+    operator fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleObject?
 
     @Throws(RemoteException::class)
     fun register(callback: IModuleCallback?, updateCode: Int, updateParam: Int)
@@ -72,7 +72,7 @@ interface IRemoteModule : IInterface {
             }
         }
 
-        private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteModule {
+        private class Proxy constructor(private val mRemote: IBinder) : IRemoteModule {
             override fun asBinder(): IBinder = mRemote
 
             @Throws(RemoteException::class)
@@ -160,7 +160,7 @@ interface IRemoteModule : IInterface {
             const val TRANSACTION_get = 2
             const val TRANSACTION_register = 3
             const val TRANSACTION_unregister = 4
-            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
+            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION
 
             fun asInterface(obj: IBinder?): IRemoteModule? {
                 if (obj == null) return null

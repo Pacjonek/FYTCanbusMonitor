@@ -50,7 +50,7 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         }
     }
 
-    override fun get(
+    override operator fun get(
         getCode: Int,
         ints: IntArray?,
         flts: FloatArray?,
