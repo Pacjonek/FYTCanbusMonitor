@@ -72,11 +72,11 @@ class MainActivity : AppCompatActivity() {
         return combined.joinToString(", ", "[", "]")
     }
 
-    private fun logIfChanged(tag: String, updatedCode: Int, values: String) {
+    private fun logIfChanged(tag: String, updatedCode: Int, message: String) {
         val messageKey = "$tag:$updatedCode"
         val shouldLog = synchronized(payloadLock) {
-            val previousValues = lastPayloads.put(messageKey, values)
-            previousValues != values
+            val previousValues = lastPayloads.put(messageKey, message)
+            previousValues != message
         }
         if (shouldLog) {
             Log.w("[FYT Module]", message)
