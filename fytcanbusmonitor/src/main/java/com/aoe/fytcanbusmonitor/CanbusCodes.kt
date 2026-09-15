@@ -260,7 +260,6 @@ object CanbusUpdateCodes {
     const val U_SHOW_DOOR_WINDOW = 1011
     const val U_EXIST_TEMP_OUT = 1012
     const val U_AIR_CONTROL_PAGE = 1014
-    const val U_CAR_BT_ON = 1015
     const val U_EXIST_AIR_CONTROL = 1018
     const val U_CANBUS_AIR_VER = 1023
     const val U_CANBUS_FRAME_TO_MTU = 1024
