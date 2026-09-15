@@ -7,7 +7,9 @@ def getVersionName = { ->
 
 android {
     namespace = "com.aoe.fytcanbusmonitor"
-    compileSdk 37
+    compileSdk {
+        version = release(37) { minorApiLevel = 2 }
+    }
 
     defaultConfig {
         targetSdk 33
@@ -19,7 +21,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            // minifyEnabled false
             // proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

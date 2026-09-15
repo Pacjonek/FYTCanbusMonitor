@@ -260,7 +260,6 @@ object CanbusUpdateCodes {
     const val U_SHOW_DOOR_WINDOW = 1011
     const val U_EXIST_TEMP_OUT = 1012
     const val U_AIR_CONTROL_PAGE = 1014
-    const val U_CAR_BT_ON = 1015
     const val U_EXIST_AIR_CONTROL = 1018
     const val U_CANBUS_AIR_VER = 1023
     const val U_CANBUS_FRAME_TO_MTU = 1024
@@ -297,7 +296,7 @@ object CanbusUpdateCodes {
     /**
      * # Audio, Radio, Bluetooth & OnStar
      */
-    const val U_CAR_BT_ON = 1015
+    const val U_CAR_BT_ON_2 = 1015
     const val U_EXIST_CAR_RADIO = 1016
     const val U_ONSTAR_SYNC_ON = 1022
     const val U_HIDE_RADIO = 1036
