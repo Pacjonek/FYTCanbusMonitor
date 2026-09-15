@@ -1,0 +1,6 @@
+package com.aoe.fytcanbusmonitor
+
+interface IConnectionObserver {
+    fun onConnected(toolkit: IRemoteToolkit)
+    fun onDisconnected()
+}

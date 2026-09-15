@@ -7,12 +7,11 @@ import android.content.ServiceConnection
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.util.Log
 import java.util.Random
 
 /**
  * Singleton [ServiceConnection] that maintains a connection to the FYT
- * toolkit service (`com.syu.ms`) and notifies [ConnectionObserver]s.
+ * toolkit service (`com.syu.ms`) and notifies [IConnectionObserver]s.
  * All observer callbacks are delivered on the main thread.
  */
 class MsToolkitConnection private constructor() : ServiceConnection {
@@ -23,7 +22,7 @@ class MsToolkitConnection private constructor() : ServiceConnection {
     private var context: Context? = null
     private var connecting = false
     private val handler = Handler(Looper.getMainLooper())
-    private val observers = ArrayList<ConnectionObserver>()
+    private val observers = ArrayList<IConnectionObserver>()
 
     private val reconnectRunnable = object : Runnable {
         override fun run() {
@@ -48,14 +47,14 @@ class MsToolkitConnection private constructor() : ServiceConnection {
     }
 
     @Synchronized
-    fun addObserver(observer: ConnectionObserver) {
+    fun addObserver(observer: IConnectionObserver) {
         if (observer in observers) return
         observers += observer
         remoteToolkit?.let { toolkit -> handler.post { observer.onConnected(toolkit) } }
     }
 
     @Synchronized
-    fun removeObserver(observer: ConnectionObserver) {
+    fun removeObserver(observer: IConnectionObserver) {
         observers -= observer
         if (remoteToolkit != null) handler.post { observer.onDisconnected() }
     }
@@ -92,6 +91,6 @@ class MsToolkitConnection private constructor() : ServiceConnection {
         private const val TOOLKIT_ACTION = "com.syu.ms.toolkit"
         private val TOOLKIT_COMPONENT = ComponentName("com.syu.ms", "app.ToolkitService")
         private const val RECONNECT_BASE_MS = 1000
-        private const val RECONNECT_JITTER_MS = 3000
+        private const val RECONNECT_JITTER_MS = 1_500
     }
 }
