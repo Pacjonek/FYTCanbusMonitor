@@ -325,3 +325,50 @@ object MainCommandCodes {
     const val C_VAVDD = 79
     const val C_GPIO_JNI = 84
 }
+
+object MainGetCodes{
+    const val G_AUTO_BLACK_SCREEN = 14
+    const val G_BACKCAR_RADAR_ON = 28
+    const val G_BACKCAR_TRACK_ON = 29
+    const val G_BACK_CAR_MUTE_ON = 23
+    const val G_BACK_CAR_ON = 26
+    const val G_BEEP_ON = 27
+    const val G_BLACK_SCREEN_ON = 15
+    const val G_BRIGHTNESS_DAY = 18
+    const val G_BRIGHTNESS_LEVEL = 35
+    const val G_BRIGHTNESS_NIGHT = 19
+    const val G_CANBUS_SUPPORT = 41
+    const val G_CANBUS_SUPPORT_CNT = 40
+    const val G_CANBUS_TYPE = 25
+    const val G_CHANNEL = 3
+    const val G_DEF_VOL_ON_BOOT = 13
+    const val G_DVD_VERSION = 21
+    const val G_DVR_ON = 34
+    const val G_EXIST_CDC = 7
+    const val G_EXIST_DISC = 5
+    const val G_EXIST_IPOD = 6
+    const val G_FLAGSYNCHRO = 4
+    const val G_GPS_LISTEN_ON = 24
+    const val G_GPS_MIX_ON = 12
+    const val G_GPS_MIX_PERCENT = 38
+    const val G_HANDBRAKE_ENABLED = 10
+    const val G_HANDBRAKING = 11
+    const val G_IPOD_ENABLED = 32
+    const val G_LAMPLET_ON = 17
+    const val G_LANG = 36
+    const val G_MCU_VERSION = 20
+    const val G_MUTE_ON = 1
+    const val G_NAVI_APP_PACKAGE_NAME = 8
+    const val G_OSD_TIME_ON = 16
+    const val G_PAGE = 33
+    const val G_PLAYER_TYPE = 37
+    const val G_POWER_ON = 0
+    const val G_POWER_OPTION = 22
+    const val G_RADIO_AIR_LINE = 31
+    const val G_RESET_DELAY_TIME = 30
+    const val G_RUN_NAVI_APP_ON_BOOT = 43
+    const val G_STANDBY_ON = 39
+    const val G_TV_ENABLED = 44
+    const val G_VOL = 2
+    const val G_VOL_MAIN_DEF = 42
+}
