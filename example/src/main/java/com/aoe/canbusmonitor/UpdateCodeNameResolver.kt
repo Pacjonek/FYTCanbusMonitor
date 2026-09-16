@@ -43,6 +43,7 @@ internal object UpdateCodeNameResolver {
                     Modifier.isStatic(field.modifiers) &&
                     field.name.startsWith("U_")
             }
+            .sortedBy { it.name }
             .forEach { field ->
                 val code = field.getInt(null)
                 val candidateName = field.name
