@@ -5,11 +5,13 @@ import com.aoe.fytcanbusmonitor.MainUpdateCodes
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import java.lang.reflect.Modifier
+import java.util.concurrent.ConcurrentHashMap
 
 internal object UpdateCodeNameResolver {
 
     private val mainUpdateCodeNames = buildCodeNameMap(MainUpdateCodes::class.java)
     private val canbusUpdateCodeNames = buildCodeNameMap(CanbusUpdateCodes::class.java)
+    private val resolvedLabels = ConcurrentHashMap<Long, String>()
 
     fun resolve(moduleCode: Int, updatedCode: Int): String? = when (moduleCode) {
         MODULE_CODE_MAIN -> mainUpdateCodeNames[updatedCode]
@@ -18,7 +20,9 @@ internal object UpdateCodeNameResolver {
     }
 
     fun resolveOrFallback(moduleCode: Int, updatedCode: Int): String =
-        resolve(moduleCode, updatedCode) ?: updatedCode.toString()
+        resolvedLabels.computeIfAbsent(cacheKey(moduleCode, updatedCode)) {
+            resolve(moduleCode, updatedCode) ?: updatedCode.toString()
+        }
 
     private fun buildCodeNameMap(codeContainer: Class<*>): Map<Int, String> {
         val namesByCode = mutableMapOf<Int, String>()
@@ -52,4 +56,7 @@ internal object UpdateCodeNameResolver {
         name.endsWith("_BEGIN") || name.endsWith("_END") || name.endsWith("_MAX") -> 0
         else -> 1
     }
+
+    private fun cacheKey(moduleCode: Int, updatedCode: Int): Long =
+        (moduleCode.toLong() shl 32) or (updatedCode.toLong() and 0xffffffffL)
 }
