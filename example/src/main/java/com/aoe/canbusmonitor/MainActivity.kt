@@ -6,13 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.aoe.fytcanbusmonitor.IModuleCallback
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_OBD
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 import java.util.concurrent.ConcurrentHashMap
 
 class MainActivity : AppCompatActivity() {
 
-    private val lastPayloads = ConcurrentHashMap<ModuleUpdateKey, String>()
+    private val lastPayloads = ConcurrentHashMap<String, String>()
     private val payloadLock = Any()
     
 
@@ -26,13 +27,14 @@ class MainActivity : AppCompatActivity() {
             loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
             (0..76) + (78..200)
         )
-        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
         IPCConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
             loggingCallback(MODULE_CODE_CANBUS.toLong(), "CANBUS"),
             (0..10) + (94..200) + (500..700) + (1000..1200)
         )
+        IPCConnection(MODULE_CODE_OBD, DataProxy.btProxy, loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
+        // IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
 
         MsToolkitConnection.instance.connect(this)
     }
@@ -77,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         updatedCode: Int,
         message: String
     ) {
-        val messageKey = ModuleUpdateKey(moduleCode, updatedCode)
+        val messageKey = "$moduleLabel:$updatedCode"
         val shouldLog = synchronized(payloadLock) {
             val previousValues = lastPayloads.put(messageKey, message)
             previousValues != message
