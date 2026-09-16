@@ -1,20 +1,15 @@
 package com.aoe.canbusmonitor
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.util.TypedValue
-import android.widget.ScrollView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.aoe.fytcanbusmonitor.IModuleCallback
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_OBD
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
-import java.util.ArrayDeque
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,19 +21,25 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
 
-        IPCConnection(MODULE_CODE_MAIN, DataProxy.mainProxy, loggingCallback("MAIN"), (0..76) + (78..200))
+        IPCConnection(
+            MODULE_CODE_MAIN,
+            DataProxy.mainProxy,
+            loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
+            (0..76) + (78..200)
+        )
         IPCConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
-            loggingCallback("CANBUS"),
+            loggingCallback(MODULE_CODE_CANBUS.toLong(), "CANBUS"),
             (0..10) + (94..200) + (500..700) + (1000..1200)
         )
-        // IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback("BT"), 0..30)
+        IPCConnection(MODULE_CODE_OBD, DataProxy.btProxy, loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
+        // IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
 
         MsToolkitConnection.instance.connect(this)
     }
 
-    private fun loggingCallback(tag: String) = object : IModuleCallback.Stub() {
+    private fun loggingCallback(moduleCode: Long, moduleLabel: String) = object : IModuleCallback.Stub() {
         override fun update(
             updatedCode: Int,
             intArray: IntArray?,
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             strArray: Array<String?>?
         ) {
             val values = formatPayloadValues(intArray, floatArray, strArray)
-            logIfChanged(tag, updatedCode, values)
+            logIfChanged(moduleCode, moduleLabel, updatedCode, values)
         }
     }
 
@@ -72,16 +73,20 @@ class MainActivity : AppCompatActivity() {
         return combined.joinToString(", ", "[", "]")
     }
 
-    private fun logIfChanged(tag: String, updatedCode: Int, message: String) {
-        val messageKey = "$tag:$updatedCode"
+    private fun logIfChanged(
+        moduleCode: Long,
+        moduleLabel: String,
+        updatedCode: Int,
+        message: String
+    ) {
+        val messageKey = "$moduleLabel:$updatedCode"
         val shouldLog = synchronized(payloadLock) {
             val previousValues = lastPayloads.put(messageKey, message)
             previousValues != message
         }
         if (shouldLog) {
-            Log.w("[FYT Module]", message)
+            val codeLabel = UpdateCodeNameResolver.resolveOrFallback(moduleCode, updatedCode)
+            Log.w("FYT/$moduleLabel", "[$codeLabel] $message")
         }
     }
-
-
 }
