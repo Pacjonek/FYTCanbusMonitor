@@ -59,9 +59,18 @@ internal object UpdateCodeNameResolver {
     }
 
     private fun scoreName(name: String): Int = when {
-        name.endsWith("_BEGIN") || name.endsWith("_END") || name.endsWith("_MAX") -> 0
+        isBoundaryAlias(name) -> 0
         else -> 1
     }
+
+    private fun isBoundaryAlias(name: String): Boolean =
+        name.endsWith("_BEGIN") ||
+            name.endsWith("_END") ||
+            name.endsWith("_MAX") ||
+            name.endsWith("_MIN") ||
+            name.endsWith("_START") ||
+            name.endsWith("_COUNT") ||
+            name.endsWith("_CNT")
 
     private fun cacheKey(moduleCode: Long, updatedCode: Int): Pair<Long, Int> =
         moduleCode to updatedCode
