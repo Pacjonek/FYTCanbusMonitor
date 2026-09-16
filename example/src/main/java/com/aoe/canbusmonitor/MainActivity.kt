@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class MainActivity : AppCompatActivity() {
 
-    private val lastPayloads = ConcurrentHashMap<String, String>()
+    private val lastPayloads = ConcurrentHashMap<Pair<Long, Int>, String>()
     private val payloadLock = Any()
     
 
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         updatedCode: Int,
         message: String
     ) {
-        val messageKey = "$moduleCode:$updatedCode"
+        val messageKey = moduleCode to updatedCode
         val shouldLog = synchronized(payloadLock) {
             val previousValues = lastPayloads.put(messageKey, message)
             previousValues != message
