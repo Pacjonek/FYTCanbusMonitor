@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         updatedCode: Int,
         message: String
     ) {
-        val messageKey = "$moduleLabel:$updatedCode"
+        val messageKey = "$moduleCode:$updatedCode"
         val shouldLog = synchronized(payloadLock) {
             val previousValues = lastPayloads.put(messageKey, message)
             previousValues != message
