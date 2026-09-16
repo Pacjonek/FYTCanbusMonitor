@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
         if (shouldLog) {
             val codeLabel = UpdateCodeNameResolver.resolveOrFallback(moduleCode, updatedCode)
-            Log.w("[FYT Module][$moduleLabel][$codeLabel]", message)
+            Log.w("FYT/$moduleLabel", "[$codeLabel] $message")
         }
     }
 }
