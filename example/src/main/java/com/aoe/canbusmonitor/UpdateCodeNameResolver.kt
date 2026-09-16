@@ -40,7 +40,12 @@ internal object UpdateCodeNameResolver {
     }
 
     private fun isPreferredName(candidateName: String, currentName: String): Boolean {
-        return scoreName(candidateName) > scoreName(currentName)
+        val candidateScore = scoreName(candidateName)
+        val currentScore = scoreName(currentName)
+        return when {
+            candidateScore != currentScore -> candidateScore > currentScore
+            else -> candidateName < currentName
+        }
     }
 
     private fun scoreName(name: String): Int = when {
