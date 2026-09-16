@@ -11,18 +11,24 @@ internal object UpdateCodeNameResolver {
 
     private val mainUpdateCodeNames = buildCodeNameMap(MainUpdateCodes::class.java)
     private val canbusUpdateCodeNames = buildCodeNameMap(CanbusUpdateCodes::class.java)
-    private val resolvedLabels = ConcurrentHashMap<Long, String>()
+    private val resolvedLabels = ConcurrentHashMap<Pair<Long, Int>, String>()
 
-    fun resolve(moduleCode: Int, updatedCode: Int): String? = when (moduleCode) {
-        MODULE_CODE_MAIN -> mainUpdateCodeNames[updatedCode]
-        MODULE_CODE_CANBUS -> canbusUpdateCodeNames[updatedCode]
+    fun resolve(moduleCode: Long, updatedCode: Int): String? = when (moduleCode) {
+        MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updatedCode]
+        MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updatedCode]
         else -> null
     }
 
-    fun resolveOrFallback(moduleCode: Int, updatedCode: Int): String =
+    fun resolveOrFallback(moduleCode: Long, updatedCode: Int): String =
         resolvedLabels.computeIfAbsent(cacheKey(moduleCode, updatedCode)) {
             resolve(moduleCode, updatedCode) ?: updatedCode.toString()
         }
+
+    fun resolve(moduleCode: Int, updatedCode: Int): String? =
+        resolve(moduleCode.toLong(), updatedCode)
+
+    fun resolveOrFallback(moduleCode: Int, updatedCode: Int): String =
+        resolveOrFallback(moduleCode.toLong(), updatedCode)
 
     private fun buildCodeNameMap(codeContainer: Class<*>): Map<Int, String> {
         val namesByCode = mutableMapOf<Int, String>()
@@ -57,6 +63,6 @@ internal object UpdateCodeNameResolver {
         else -> 1
     }
 
-    private fun cacheKey(moduleCode: Int, updatedCode: Int): Long =
-        (moduleCode.toLong() shl 32) or (updatedCode.toLong() and 0xffffffffL)
+    private fun cacheKey(moduleCode: Long, updatedCode: Int): Pair<Long, Int> =
+        moduleCode to updatedCode
 }

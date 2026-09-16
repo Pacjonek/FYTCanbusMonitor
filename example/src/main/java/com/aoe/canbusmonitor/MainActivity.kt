@@ -23,21 +23,21 @@ class MainActivity : AppCompatActivity() {
         IPCConnection(
             MODULE_CODE_MAIN,
             DataProxy.mainProxy,
-            loggingCallback(MODULE_CODE_MAIN, "MAIN"),
+            loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
             (0..76) + (78..200)
         )
-        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT, "BT"), 0..30)
+        IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
         IPCConnection(
             MODULE_CODE_CANBUS,
             DataProxy.canbusProxy,
-            loggingCallback(MODULE_CODE_CANBUS, "CANBUS"),
+            loggingCallback(MODULE_CODE_CANBUS.toLong(), "CANBUS"),
             (0..10) + (94..200) + (500..700) + (1000..1200)
         )
 
         MsToolkitConnection.instance.connect(this)
     }
 
-    private fun loggingCallback(moduleCode: Int, moduleLabel: String) = object : IModuleCallback.Stub() {
+    private fun loggingCallback(moduleCode: Long, moduleLabel: String) = object : IModuleCallback.Stub() {
         override fun update(
             updatedCode: Int,
             intArray: IntArray?,
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logIfChanged(
-        moduleCode: Int,
+        moduleCode: Long,
         moduleLabel: String,
         updatedCode: Int,
         message: String
