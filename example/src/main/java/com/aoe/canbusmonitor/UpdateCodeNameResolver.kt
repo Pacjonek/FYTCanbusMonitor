@@ -37,9 +37,10 @@ internal object UpdateCodeNameResolver {
 
     private fun buildCodeNameMap(codeContainer: Class<*>): Map<Int, String> {
         val namesByCode = mutableMapOf<Int, String>()
-        codeContainer.fields
+        codeContainer.declaredFields
             .filter { field ->
                 field.type == Int::class.javaPrimitiveType &&
+                    Modifier.isPublic(field.modifiers) &&
                     Modifier.isStatic(field.modifiers) &&
                     field.name.startsWith("U_")
             }
