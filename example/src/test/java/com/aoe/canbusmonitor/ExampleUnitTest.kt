@@ -26,4 +26,11 @@ class ExampleUnitTest {
     fun fallsBackToNumericCodeWhenNameIsMissing() {
         assertEquals("31", UpdateCodeNameResolver.resolveOrFallback(MODULE_CODE_BT, 31))
     }
+
+    @Test
+    fun keepsResolvedNamesScopedPerModule() {
+        assertEquals("U_APP_ID", UpdateCodeNameResolver.resolveOrFallback(MODULE_CODE_MAIN, 0))
+        assertEquals("U_DOOR_ENGINE", UpdateCodeNameResolver.resolveOrFallback(MODULE_CODE_CANBUS, 0))
+        assertEquals("0", UpdateCodeNameResolver.resolveOrFallback(MODULE_CODE_BT, 0))
+    }
 }
