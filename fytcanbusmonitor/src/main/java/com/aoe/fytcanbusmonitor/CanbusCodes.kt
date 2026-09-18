@@ -296,7 +296,7 @@ object CanbusUpdateCodes {
     /**
      * # Audio, Radio, Bluetooth & OnStar
      */
-    const val U_CAR_BT_ON_2 = 1015
+    const val U_CAR_BT_ON = 1015
     const val U_EXIST_CAR_RADIO = 1016
     const val U_ONSTAR_SYNC_ON = 1022
     const val U_HIDE_RADIO = 1036

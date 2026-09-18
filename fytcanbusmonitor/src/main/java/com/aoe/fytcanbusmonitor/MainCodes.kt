@@ -20,7 +20,7 @@ object MainUpdateCodes {
     const val U_ECARLINK_ON = 67
     const val U_CUTACC_DELAY_CLOSE_SCREEN = 71
     const val U_SLEEP_AIRPLANE = 76
-    const val U_START_STOP_ENABLE = 88
+    const val U_START_STOP_ENABLED = 88
     const val U_SYSTEM_SLEEP_STATE = 103
     const val U_BLACK_STANDBY = 110
 
@@ -33,7 +33,7 @@ object MainUpdateCodes {
     const val U_BRIGHT_LEVEL_DAY = 32
     const val U_BRIGHT_LEVEL_NIGHT = 33
     const val U_SCREEN_TOUCH_EVENT = 77
-    const val U_STATUS_SCREENSHOTS_ENABLE = 117
+    const val U_STATUS_SCREENSHOTS_ENABLED = 117
 
     /**
      * # Lighting & LEDs
@@ -91,8 +91,8 @@ object MainUpdateCodes {
     const val U_360CAMERA_BACKCAR_ENABLED = 83
     const val U_TRACK_REVERES_ENABLED = 102
     const val U_CAMERA_VOLTAGE = 119
-    const val U_CAMERA_AHD_ENABLE = 121
-    const val U_RESERVING_TYPE = 122
+    const val U_CAMERA_AHD_ENABLED = 121
+    const val U_REVERSING_TYPE = 122
 
     /**
      * # Parking Radars & Distance Sensors
@@ -142,10 +142,10 @@ object MainUpdateCodes {
      * # Controls, Keys & Gestures
      */
     const val U_PANEL_KEY_TYPE = 51
-    const val U_MCU_DIEECTION_KEY = 60
+    const val U_MCU_DIRECTION_KEY = 60
     const val U_PANEL_KEY_TYPE_CNT = 63
-    const val U_GUESTURE = 64
-    const val U_MCU_PANEL_KEY_ENABLE = 82
+    const val U_GESTURE = 64
+    const val U_MCU_PANEL_KEY_ENABLED = 82
     const val U_ROLL_KEY_TYPE = 89
 
     /**
@@ -214,7 +214,7 @@ object MainCommandCodes {
     const val C_ENTER_SLEEP_WAKEUP = 46
     const val C_SLEEP_AIRPLANE = 48
     const val C_ARM_RESET_SELF = 53
-    const val C_START_STOP_ENABLED = 61
+    const val C_START_STOP_ENABLE = 61
     const val C_AIRPLANE_MODE = 75
     const val C_EXIT_APP = 81
 
@@ -277,9 +277,9 @@ object MainCommandCodes {
     const val C_TRACK_REVERES_ENABLE = 68
     const val C_360_ENTER_BACKCAR = 74
     const val C_360CAMERA_OFF = 76
-    const val C_CAMERA_VOTAGE = 85
+    const val C_CAMERA_VOLTAGE = 85
     const val C_CAMERA_AHD_ENABLE = 87
-    const val C_RESERVING_TYPE = 88
+    const val C_REVERSING_TYPE = 88
 
     /**
      * # Parking Radars
@@ -296,7 +296,7 @@ object MainCommandCodes {
     const val C_PLAY_INFO = 23
     const val C_VIDEO_IMAGE = 36
     const val C_VIDEO_POSITION = 44
-    const val C_AUX_ENABLED = 47
+    const val C_AUX_ENABLE = 47
     const val C_VIDEO_OUT_ON = 51
     const val C_VIDEO_OUTPUT_PARAMETERS = 69
     const val C_MIC_TYPE = 71
@@ -307,7 +307,7 @@ object MainCommandCodes {
     /**
      * # MCU, Hardware & Vehicle peripheral control
      */
-    const val C_HANDBRAKE_ENABLED = 4
+    const val C_HANDBRAKE_ENABLE = 4
     const val C_MCU_SERIAL = 14
     const val C_MCU_POWER_OPTION = 15
     const val C_MCU_ON = 17
