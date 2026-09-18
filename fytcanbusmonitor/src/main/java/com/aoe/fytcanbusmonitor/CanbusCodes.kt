@@ -76,100 +76,22 @@ object CanbusUpdateCodes {
     const val U_DOOR_END = 6
 
     /**
-     * # Air condition status
-     */
-    const val U_AIR_BEGIN = 10
-    const val U_AIR_POWER = 10
-    const val U_AIR_AC = 11
-    const val U_AIR_CYCLE = 12
-    const val U_AIR_AUTO = 13
-    const val U_AIR_DUAL = 14
-    const val U_AIR_MAX_FRONT = 15
-    const val U_AIR_REAR_DEFROST = 16
-    const val U_AIR_FRONT_HOT = 17
-    const val U_AIR_BLOW_UP_LEFT = 18
-    const val U_AIR_BLOW_BODY_LEFT = 19
-    const val U_AIR_BLOW_FOOT_LEFT = 20
-    const val U_AIR_WIND_LEVEL_LEFT = 21
-    const val U_AIR_BLOW_UP_RIGHT = 22
-    const val U_AIR_BLOW_BODY_RIGHT = 23
-    const val U_AIR_BLOW_FOOT_RIGHT = 24
-    const val U_AIR_WIND_LEVEL_RIGHT = 25
-    const val U_AIR_AUTO_RIGHT = 26
-    const val U_AIR_TEMP_LEFT = 27
-    const val U_AIR_TEMP_RIGHT = 28
-    const val U_AIR_SEAT_HOT_LEFT = 29
-    const val U_AIR_SEAT_HOT_RIGHT = 30
-    const val U_AIR_SEAT_BLOW_LEFT = 31
-    const val U_AIR_SEAT_BLOW_RIGHT = 32
-    const val U_AIR_FLOW_AUTO = 33
-    const val U_AIR_NANOE = 34
-    const val U_AIR_SWING = 35
-    const val U_AIR_CYCLE_AUTO = 36
-    const val U_AIR_TEMP_UNIT = 37
-    const val U_AIR_REAR = 38
-    const val U_AIR_REAR_DUAL = 39
-    const val U_AIR_REAR_TEMP_LEFT = 40
-    const val U_AIR_REAR_TEMP_RIGHT = 41
-    const val U_AIR_REAR_POWER = 42
-    const val U_AIR_REAR_AUTO = 43
-    const val U_AIR_REAR_WIN_LEV = 44
-    const val U_AIR_REAR_VIEW_HOT = 45
-    const val U_AIR_REAR_BLOW_BODY = 46
-    const val U_AIR_REAR_BLOW_FOOT = 47
-    const val U_AIR_REAR_BLOW_UP = 48
-    const val U_AIR_BLOW_AUTO_LEFT = 49
-    const val U_AIR_BLOW_AUTO_RIGHT = 50
-    const val U_AIR_WIND_STRENGTH = 51
-    const val U_AIR_ECO = 52
-    const val U_AIR_ACMAX = 53
-    const val U_AIR_AQS = 54
-    const val U_AIR_MONO = 55
-    const val U_AIR_TRMP_SET_V = 56
-    const val U_AIR_ZONE = 57
-    const val U_AIR_ION = 58
-    const val U_AIR_REARVIEW_HOT = 59
-    const val U_AIR_FULL_LEFT = 60
-    const val U_AIR_FULL_RIGHT = 61
-    const val U_AIR_SYNC = 62
-    const val U_AIR_HEAT = 63
-    const val U_CARINFO_AIR_LEV = 64
-    const val U_AIR_FRONT_DEFROST = 65
-    const val U_AIR_HOT_STEER = 66
-    const val U_AIR_REAR_LOCK = 67
-    const val U_AIR_PTC = 68
-    const val U_AUTO_LEV = 69
-    const val U_AIR_FAST = 70
-    const val U_AIR_SOFT = 71
-    const val U_AIR_BLOW_HEAD = 72
-    const val U_AIR_AUTO_WIN_LEV = 73
-    const val U_AIR_AUTO_WIN_BLOW = 74
-    const val U_AIR_TEMP_TYPE = 75
-    const val U_AIR_CLEAN = 76
-    const val U_AIR_BLOW_MODE_LEFT = 77
-    const val U_AIR_REAR_AC = 78
-    const val U_AIR_FULL = 79
-    const val U_AIR_PARK = 80
-    const val U_AIR_REAR_AUTO_RIGHT = 81
-    const val U_AIR_REAR_BLOW_BODY_RIGHT = 82
-    const val U_AIR_REAR_BLOW_FOOT_RIGHT = 83
-    const val U_AIR_REAR_BLOW_UP_RIGHT = 84
-    const val U_AIR_REAR_COOL = 85
-    const val U_AIR_REAR_MANUAL = 86
-    const val U_AIR_BLOW_MODE_RIGHT = 87
-    const val U_AIR_REAR_SEAT_HOT_LEFT = 88
-    const val U_AIR_REAR_SEAT_HOT_RIGHT = 89
-    const val U_AIR_REAR_SEAT_BLOW_LEFT = 90
-    const val U_AIR_REAR_SEAT_BLOW_RIGHT = 91
-    const val U_AIR_FRONT_ONLY = 92
-    const val U_AIR_END = 93
-
+    * # "Proprietary" or not?
+    */
+    const val U_CARINFO_TIME = 49;
+    const val U_CARINFO_LANE_DEVIATION_SYS_STATE = 64;
+    const val U_CARINFO_CRASH_SWITCH = 65;
+    const val U_CARINFO_360_WORK_STATE = 67;
+    const val U_CARINFO_ACC_WORK_MODE = 69;
+    const val U_CARINFO_AUTO_BRAKE_ASSIST_SWITCH = 78;
+    const val U_CARINFO_SUPERFASTCHARGE_STATE = 87;
+    const val U_CARINFO_SUPERFASTCHARGE_NUMBER = 88;
 
     /**
     # "Proprietary" codes
     * Can vary depends on exact selected canbox manuf./model/profile/fw ver.
      * Usually used by `com.syu.canbus` where every "group" of cars have their own code logic
-    * Range: 94 - (theoretically) 499
+    * Range: (maybe) 94 - (maybe) 499
     **/
 
     // 'Fiat `All` models' (whatever that means) from Hiworld canbus box
@@ -188,6 +110,20 @@ object CanbusUpdateCodes {
     const val U_HIWORLD_FIAT_ALL_CARINFO_TRIPB_TRAVEL_TIME = 109
     const val U_HIWORLD_FIAT_ALL_CARINFO_END = 110
     /* # End Section */
+
+    // Some other propably car specific codes 
+    /*const val U_CARINFO_NONSLIP_STATE = 98;
+    const val U_CARINFO_STARTPROMPT = 99;
+    const val U_CAR_BACKCAR = 101;
+    const val U_CARINFO_NONSLIP_STATE_ENABLE = 102;
+    const val U_CARINFO_INCAR_AUTOVENTILATION_ONOFF = 104;
+    const val U_CARINFO_INCAR_AUTOVENTILATION_ENABLE = 105;
+    const val U_CARINFO_BCM_ENABLE = 106;
+    const val U_CARINFO_INCAR_AUTOLOCK_ONOFF = 107;
+    const val U_CARINFO_NONSLIP_STATE_NEW = 111;
+    const val U_CARINFO_AIR_AUTOClEAN_ONOFF = 112;
+    const val U_CARINFO_RAMP_START = 114;
+    */
 
     /**
      * # "Universal" codes
@@ -321,6 +257,95 @@ object CanbusUpdateCodes {
     const val U_CANBUS_BENZ_BUTTON = 1042
     const val U_JAHUAR_LZ_RADAR = 1047
     const val U_TCROSS_ZH_BUTTON = 1048
+
+    /**
+     * # Air condition status
+     */
+    const val U_AIR_BEGIN = 10
+    const val U_AIR_POWER = 10
+    const val U_AIR_AC = 11
+    const val U_AIR_CYCLE = 12
+    const val U_AIR_AUTO = 13
+    const val U_AIR_DUAL = 14
+    const val U_AIR_MAX_FRONT = 15
+    const val U_AIR_REAR_DEFROST = 16
+    const val U_AIR_FRONT_HOT = 17
+    const val U_AIR_BLOW_UP_LEFT = 18
+    const val U_AIR_BLOW_BODY_LEFT = 19
+    const val U_AIR_BLOW_FOOT_LEFT = 20
+    const val U_AIR_WIND_LEVEL_LEFT = 21
+    const val U_AIR_BLOW_UP_RIGHT = 22
+    const val U_AIR_BLOW_BODY_RIGHT = 23
+    const val U_AIR_BLOW_FOOT_RIGHT = 24
+    const val U_AIR_WIND_LEVEL_RIGHT = 25
+    const val U_AIR_AUTO_RIGHT = 26
+    const val U_AIR_TEMP_LEFT = 27
+    const val U_AIR_TEMP_RIGHT = 28
+    const val U_AIR_SEAT_HOT_LEFT = 29
+    const val U_AIR_SEAT_HOT_RIGHT = 30
+    const val U_AIR_SEAT_BLOW_LEFT = 31
+    const val U_AIR_SEAT_BLOW_RIGHT = 32
+    const val U_AIR_FLOW_AUTO = 33
+    const val U_AIR_NANOE = 34
+    const val U_AIR_SWING = 35
+    const val U_AIR_CYCLE_AUTO = 36
+    const val U_AIR_TEMP_UNIT = 37
+    const val U_AIR_REAR = 38
+    const val U_AIR_REAR_DUAL = 39
+    const val U_AIR_REAR_TEMP_LEFT = 40
+    const val U_AIR_REAR_TEMP_RIGHT = 41
+    const val U_AIR_REAR_POWER = 42
+    const val U_AIR_REAR_AUTO = 43
+    const val U_AIR_REAR_WIN_LEV = 44
+    const val U_AIR_REAR_VIEW_HOT = 45
+    const val U_AIR_REAR_BLOW_BODY = 46
+    const val U_AIR_REAR_BLOW_FOOT = 47
+    const val U_AIR_REAR_BLOW_UP = 48
+    const val U_AIR_BLOW_AUTO_LEFT = 49
+    const val U_AIR_BLOW_AUTO_RIGHT = 50
+    const val U_AIR_WIND_STRENGTH = 51
+    const val U_AIR_ECO = 52
+    const val U_AIR_ACMAX = 53
+    const val U_AIR_AQS = 54
+    const val U_AIR_MONO = 55
+    const val U_AIR_TRMP_SET_V = 56
+    const val U_AIR_ZONE = 57
+    const val U_AIR_ION = 58
+    const val U_AIR_REARVIEW_HOT = 59
+    const val U_AIR_FULL_LEFT = 60
+    const val U_AIR_FULL_RIGHT = 61
+    const val U_AIR_SYNC = 62
+    const val U_AIR_HEAT = 63
+    const val U_CARINFO_AIR_LEV = 64
+    const val U_AIR_FRONT_DEFROST = 65
+    const val U_AIR_HOT_STEER = 66
+    const val U_AIR_REAR_LOCK = 67
+    const val U_AIR_PTC = 68
+    const val U_AUTO_LEV = 69
+    const val U_AIR_FAST = 70
+    const val U_AIR_SOFT = 71
+    const val U_AIR_BLOW_HEAD = 72
+    const val U_AIR_AUTO_WIN_LEV = 73
+    const val U_AIR_AUTO_WIN_BLOW = 74
+    const val U_AIR_TEMP_TYPE = 75
+    const val U_AIR_CLEAN = 76
+    const val U_AIR_BLOW_MODE_LEFT = 77
+    const val U_AIR_REAR_AC = 78
+    const val U_AIR_FULL = 79
+    const val U_AIR_PARK = 80
+    const val U_AIR_REAR_AUTO_RIGHT = 81
+    const val U_AIR_REAR_BLOW_BODY_RIGHT = 82
+    const val U_AIR_REAR_BLOW_FOOT_RIGHT = 83
+    const val U_AIR_REAR_BLOW_UP_RIGHT = 84
+    const val U_AIR_REAR_COOL = 85
+    const val U_AIR_REAR_MANUAL = 86
+    const val U_AIR_BLOW_MODE_RIGHT = 87
+    const val U_AIR_REAR_SEAT_HOT_LEFT = 88
+    const val U_AIR_REAR_SEAT_HOT_RIGHT = 89
+    const val U_AIR_REAR_SEAT_BLOW_LEFT = 90
+    const val U_AIR_REAR_SEAT_BLOW_RIGHT = 91
+    const val U_AIR_FRONT_ONLY = 92
+    const val U_AIR_END = 93
 
     /**
      * # Max limit
