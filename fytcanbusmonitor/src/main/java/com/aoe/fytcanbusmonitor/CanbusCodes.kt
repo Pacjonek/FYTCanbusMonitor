@@ -1,12 +1,24 @@
 package com.aoe.fytcanbusmonitor
 
 object CanbusCommandCodes {
-
-    const val C_CANBUS_ID = 1000
-    const val C_MISC_BEGIN = 1000
+    
+    const val C_CMD_VIDEO = 1;
+    const val C_CMD_360_TOUCH_LY = 2;
+    const val C_CMD_SPEED_ALARM = 3;
+    const val C_CMD_TIME_SETTINGS = 7;
+    const val C_CMD_SAFE_DRIVER = 8;
+    const val C_CMD_NONSLIP_SET = 9;
+    const val C_CMD_STARTPROMPT = 10;
+    const val C_CMD_AIR_AUTOClEAN = 11;
+    const val C_CMD_INCAR_AUTOVENTILATION = 12;
+    const val C_CMD_INCAR_AUTOLOCK = 13;
+    const val C_CMD_RAMP_START = 14;
 
     const val C_CMD_START_REQ_ADD = 100
     const val C_CMD_SET_ADD = 101
+
+    const val C_CANBUS_ID = 1000
+    const val C_MISC_BEGIN = 1000
 
     const val C_DRIVER_ON_RIGHT = 1001
     const val C_SHOW_AIR_WINDOW = 1002
