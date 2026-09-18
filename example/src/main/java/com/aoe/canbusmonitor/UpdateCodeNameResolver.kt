@@ -18,7 +18,7 @@ internal object UpdateCodeNameResolver {
     private val canbusUpdateCodeNames = buildCodeNameMap(CanbusUpdateCodes::class.java)
     private val resolvedLabels = ConcurrentHashMap<ModuleUpdateKey, String>()
 
-    fun resolve(moduleCode: Long, updatedCode: Int): String? = when (moduleCode) {
+    fun resolve(moduleCode: Long, updateCode: Int): String? = when (moduleCode) {
         MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updatedCode]+"($updateCode)"
         MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updatedCode]+"($updateCode)"
         else -> null
