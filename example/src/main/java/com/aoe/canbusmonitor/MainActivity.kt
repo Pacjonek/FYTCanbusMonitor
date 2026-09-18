@@ -3,6 +3,7 @@ package com.aoe.canbusmonitor
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.aoe.fytcanbusmonitor.RemoteModuleProxy
 import com.aoe.fytcanbusmonitor.IModuleCallback
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
@@ -23,17 +24,17 @@ class MainActivity : AppCompatActivity() {
 
         IPCConnection(
             MODULE_CODE_MAIN,
-            DataProxy.mainProxy,
+            new RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
             (0..76) + (78..256)
         )
         IPCConnection(
             MODULE_CODE_CANBUS,
-            DataProxy.canbusProxy,
+            new RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_CANBUS.toLong(), "CANBUS"),
             (0..10) + (94..200) + (500..700) + (1000..1200)
         )
-        IPCConnection(MODULE_CODE_OBD, DataProxy.btProxy, loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
+        IPCConnection(MODULE_CODE_OBD, new RemoteModuleProxy(), loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
         // IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
 
         MsToolkitConnection.instance.connect(this)
