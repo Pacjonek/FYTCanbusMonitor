@@ -19,14 +19,19 @@ internal object UpdateCodeNameResolver {
     private val resolvedLabels = ConcurrentHashMap<ModuleUpdateKey, String>()
 
     fun resolve(moduleCode: Long, updateCode: Int): String? = when (moduleCode) {
-        MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updateCode]+"($updateCode)"
-        MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updateCode]+"($updateCode)"
+        MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updateCode]
+        MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updateCode]
         else -> null
     }
 
-    fun resolveOrFallback(moduleCode: Long, updatedCode: Int): String =
-        resolvedLabels.computeIfAbsent(cacheKey(moduleCode, updatedCode)) {
-            resolve(moduleCode, updatedCode) ?: updatedCode.toString()
+    fun resolveOrFallback(moduleCode: Long, updateCode: Int): String =
+        resolvedLabels.computeIfAbsent(cacheKey(moduleCode, updateCode)) {
+            val moduleName = resolve(moduleCode, updateCode)
+            if(moduleName != null){
+                moduleName+"($moduleCode)"
+            } else {
+                updateCode.toString()
+            }
         }
 
     fun resolve(moduleCode: Int, updatedCode: Int): String? =
