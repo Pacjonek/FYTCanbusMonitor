@@ -24,17 +24,17 @@ class MainActivity : AppCompatActivity() {
 
         IPCConnection(
             MODULE_CODE_MAIN,
-            new RemoteModuleProxy(),
+            RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
             (0..76) + (78..256)
         )
         IPCConnection(
             MODULE_CODE_CANBUS,
-            new RemoteModuleProxy(),
+            RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_CANBUS.toLong(), "CANBUS"),
             (0..10) + (94..200) + (500..700) + (1000..1200)
         )
-        IPCConnection(MODULE_CODE_OBD, new RemoteModuleProxy(), loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
+        IPCConnection(MODULE_CODE_OBD, RemoteModuleProxy(), loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
         // IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
 
         MsToolkitConnection.instance.connect(this)
