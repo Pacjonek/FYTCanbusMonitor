@@ -7,6 +7,6 @@ interface IConnectionObserver {
 
 @Deprecated(
     message = "Name `ConnectionObserver` is misleading",
-    replaceWith = ReplaceWith("NewName")
+    replaceWith = ReplaceWith("IConnectionObserver")
 )
 typealias ConnectionObserver = IConnectionObserver
