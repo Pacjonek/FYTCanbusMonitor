@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
             MODULE_CODE_MAIN,
             DataProxy.mainProxy,
             loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
-            (0..76) + (78..200)
+            (0..76) + (78..256)
         )
         IPCConnection(
             MODULE_CODE_CANBUS,
