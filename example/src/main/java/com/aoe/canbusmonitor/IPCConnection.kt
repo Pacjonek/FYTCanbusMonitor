@@ -34,7 +34,7 @@ class IPCConnection(
         }
         try {
             val module = toolkit.getRemoteModule(moduleId)
-            module.cmd(1043, intArrayOf(1), null, null)
+            module?.cmd(1043, intArrayOf(1), null, null)
             remoteProxy.remoteModule = module
         } catch (e: RemoteException) {
             e.printStackTrace()
