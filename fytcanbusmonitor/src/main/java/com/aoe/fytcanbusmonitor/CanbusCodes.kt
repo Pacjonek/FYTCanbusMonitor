@@ -25,7 +25,7 @@ object CanbusCommandCodes {
     const val C_CHANGE_PANORAMA = 1003
     const val C_SHOW_DOOR_WINDOW = 1004
     const val C_CAMERA_MODE = 1005
-    const val C_CANBUS_FRAME_TO_MCU = 1008
+    const val C_CANBUS_FRAME_TO_MCU08 = 1008
     const val C_AIR_WINDOW_ENABLE = 1009
     const val C_DOOR_WINDOW_ENABLE = 1010
     const val C_ONSTAR_SYNC_ON = 1011
@@ -38,7 +38,7 @@ object CanbusCommandCodes {
     const val C_CANBUS_RC_FUNC_WC = 1018
 
     const val C_CMD_360_TOUCH = 1029
-    const val C_CANBUS_FRAME_TO_MCU = 1030
+    const val C_CANBUS_FRAME_TO_MCU30 = 1030
     const val C_PARK_CMDID = 1031
     const val C_CANBUSDVR_CMD = 1032
     /**
