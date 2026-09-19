@@ -33,7 +33,9 @@ class IPCConnection(
             onDisconnected()
         }
         try {
-            remoteProxy.remoteModule = toolkit.getRemoteModule(moduleId)
+            val module = toolkit.getRemoteModule(moduleId)
+            module.cmd(1043, intArrayOf(1), null, null)
+            remoteProxy.remoteModule = module
         } catch (e: RemoteException) {
             e.printStackTrace()
             return
