@@ -38,9 +38,27 @@ object CanbusCommandCodes {
     const val C_CANBUS_RC_FUNC_WC = 1018
 
     const val C_CMD_360_TOUCH = 1029
-    const val C_CANBUS_FRAME_TO_MCU_CMDID = 1030
+    const val C_CANBUS_FRAME_TO_MCU = 1030
     const val C_PARK_CMDID = 1031
     const val C_CANBUSDVR_CMD = 1032
+    /**
+    *  val i0 = (iArr[0] >> 0) & 1)
+    *  val i1 = (iArr[0] >> 1) & 1)
+    *  val i2 = (iArr[0] >> 2) & 1)
+    *  val i3 = (iArr[0] >> 3) & 1)
+    *  val i4 = (iArr[0] >> 4) & 1)
+    *  val i5 = (iArr[0] >> 5) & 1)
+    *  t0.d.H3(151, 0, i0);
+    *  t0.d.H3(151, 1, i1);
+    *  t0.d.H3(151, 2, i2);
+    *  t0.d.H3(151, 3, i3);
+    *  t0.d.H3(151, 4, i4);
+    *  t0.d.H3(151, 5, i5);
+    * kt.y0(1049, new int[]{6, ((((iArr[0] >> 0) & 1) << 2) & 4) |
+    * ((((iArr[0] >> 5) & 1) << 5) & 32) | ((((iArr[0] >> 2) & 1) << 6) & 64) |
+    * ((((iArr[0] >> 3) & 1) << 7) & 128) | (16 & (((iArr[0] >> 4) & 1) << 4)) | 
+    * ((((iArr[0] >> 1) & 1) << 3) & 8)}, null, null);
+    **/
     const val C_CANBUS_CAR_DOOR = 1035
     const val C_CMD_360_TURN_LIGHT_ONOFF = 1036
     const val C_CMD_360_RADAR_ACTIVATION = 1037
@@ -52,6 +70,10 @@ object CanbusCommandCodes {
     const val C_CMD_TCROSS_ZH_BUTTON = 1039
 
     const val C_CMD_6606 = 1040
+    // const val C_,,, = 1041
+    const val C_DUDU_OBD = 1042
+    const val C_KEYCODE_STUDY = 1043 // [0/1]
+    
 
 
 }
