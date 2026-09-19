@@ -32,9 +32,9 @@ class MainActivity : AppCompatActivity() {
             MODULE_CODE_CANBUS,
             RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_CANBUS.toLong(), "CANBUS"),
-            (0..10) + (94..200) + (500..700) + (1000..1200)
+            (0..300) + (500..700) + (1000..1200)
         )
-        IPCConnection(MODULE_CODE_OBD, RemoteModuleProxy(), loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
+        // IPCConnection(MODULE_CODE_OBD, RemoteModuleProxy(), loggingCallback(MODULE_CODE_OBD.toLong(), "OBD"), 1000..1200)
         // IPCConnection(MODULE_CODE_BT, DataProxy.btProxy, loggingCallback(MODULE_CODE_BT.toLong(), "BT"), 0..30)
 
         MsToolkitConnection.instance.connect(this)
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
         floatArray: FloatArray?,
         strArray: Array<String?>?
     ): String {
-        val intBitwiseArray = if (intArray?.any { it != (it and 255) } == true) {
+        val intBitwiseArray = if (intArray?.any { it > 0 && it != (it and 255) } == true) {
             intArray.map { it and 255 }.toIntArray()
         } else {
             null
