@@ -5,10 +5,9 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.aoe.fytcanbusmonitor.RemoteModuleProxy
 import com.aoe.fytcanbusmonitor.IModuleCallback
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
-import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_OBD
-import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.MsToolkitConnection
 import java.util.concurrent.ConcurrentHashMap
 
@@ -27,6 +26,12 @@ class MainActivity : AppCompatActivity() {
             RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_MAIN.toLong(), "MAIN"),
             (0..76) + (78..256)
+        )
+        IPCConnection(
+            MODULE_CODE_CANBUS,
+            RemoteModuleProxy(),
+            loggingCallback(MODULE_CODE_BT.toLong(), "BT"),
+            (0..100)
         )
         IPCConnection(
             MODULE_CODE_CANBUS,
