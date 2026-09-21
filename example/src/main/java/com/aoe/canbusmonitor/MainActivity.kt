@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             (0..76) + (78..256)
         )
         IPCConnection(
-            MODULE_CODE_CANBUS,
+            MODULE_CODE_BT,
             RemoteModuleProxy(),
             loggingCallback(MODULE_CODE_BT.toLong(), "BT"),
             (0..100)
