@@ -1,9 +1,12 @@
 package com.aoe.canbusmonitor
 
-import com.aoe.fytcanbusmonitor.CanbusUpdateCodes
-import com.aoe.fytcanbusmonitor.MainUpdateCodes
-import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
+
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
+import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
+import com.aoe.fytcanbusmonitor.MainUpdateCodes
+import com.aoe.fytcanbusmonitor.BtUpdateCodes
+import com.aoe.fytcanbusmonitor.CanbusUpdateCodes
 import java.lang.reflect.Modifier
 import java.util.concurrent.ConcurrentHashMap
 
@@ -15,22 +18,24 @@ internal data class ModuleUpdateKey(
 internal object UpdateCodeNameResolver {
 
     private val mainUpdateCodeNames = buildCodeNameMap(MainUpdateCodes::class.java)
+    private val bluetoothUpdateCodeNames = buildCodeNameMap(BluetoothUpdateCodes::class.java)
     private val canbusUpdateCodeNames = buildCodeNameMap(CanbusUpdateCodes::class.java)
     private val resolvedLabels = ConcurrentHashMap<ModuleUpdateKey, String>()
 
     fun resolve(moduleCode: Long, updateCode: Int): String? = when (moduleCode) {
         MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updateCode]
+        BT_CODE_MAIN.toLong() -> bluetoothUpdateCodeNames[updateCode]
         MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updateCode]
         else -> null
     }
 
-    fun resolveOrFallback(moduleCode: Long, updateCode: Int): String =
-        resolvedLabels.computeIfAbsent(cacheKey(moduleCode, updateCode)) {
-            val moduleName = resolve(moduleCode, updateCode)
-            if(moduleName != null){
-                moduleName+"($moduleCode)"
-            } else {
+    fun resolveOrFallback(moduleId: Long, updateCode: Int): String =
+        resolvedLabels.computeIfAbsent(cacheKey(moduleId, updateCode)) {
+            val moduleName = resolve(moduleId, updateCode)
+            if(moduleName == null){
                 updateCode.toString()
+            } else {
+                "$updateCode:$moduleName"
             }
         }
 
