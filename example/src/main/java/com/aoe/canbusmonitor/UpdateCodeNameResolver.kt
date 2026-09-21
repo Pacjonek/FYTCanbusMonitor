@@ -5,7 +5,7 @@ import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_MAIN
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_BT
 import com.aoe.fytcanbusmonitor.ModuleCodes.MODULE_CODE_CANBUS
 import com.aoe.fytcanbusmonitor.MainUpdateCodes
-import com.aoe.fytcanbusmonitor.BtUpdateCodes
+import com.aoe.fytcanbusmonitor.BluetoothUpdateCodes
 import com.aoe.fytcanbusmonitor.CanbusUpdateCodes
 import java.lang.reflect.Modifier
 import java.util.concurrent.ConcurrentHashMap
