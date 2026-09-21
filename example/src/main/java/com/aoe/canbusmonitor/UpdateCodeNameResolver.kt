@@ -24,7 +24,7 @@ internal object UpdateCodeNameResolver {
 
     fun resolve(moduleCode: Long, updateCode: Int): String? = when (moduleCode) {
         MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updateCode]
-        BT_CODE_MAIN.toLong() -> bluetoothUpdateCodeNames[updateCode]
+        MODULE_CODE_BT.toLong() -> bluetoothUpdateCodeNames[updateCode]
         MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updateCode]
         else -> null
     }
