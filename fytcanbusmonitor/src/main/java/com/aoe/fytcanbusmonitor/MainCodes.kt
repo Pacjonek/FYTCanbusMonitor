@@ -226,7 +226,7 @@ object MainUpdateCodes {
     const val U_RESERVE = 30
     const val U_RESERVE2 = 44
 
-        const val U_AMBIENT_LIGHT = 123;
+        const val U_AMBIENT_LIGHT_O = 123;
         const val THIRD_DVR_SETUP = 124;
         const val U_CAMERA_ALWAYS_POWER_SUPPLY = 125;
         const val U_FRONT_CAMERA_ENABLE = 126;
@@ -285,7 +285,7 @@ object MainUpdateCodes {
         const val U_UI_MODE = 178;
         const val U_LOCATION = 179;
         const val U_REVERSE_ANTI_SHAKING = 180;
-        const val U_LAMPLET = 181;
+        const val U_LAMPLET_O = 181;
         const val U_MOBILE_LINK_STATUS = 182;
         const val U_ALTITUDE_FIX_VALUE = 183;
         const val U_ANDROID_AUDIO_STATE = 184;

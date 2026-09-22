@@ -1,5 +1,6 @@
 package com.aoe.fytcanbusmonitor
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -60,7 +61,7 @@ class MsToolkitConnection private constructor() : ServiceConnection {
     }
 
     @Synchronized
-    fun clearObservers() {
+    public fun clearObservers() {
         if (remoteToolkit != null) {
             connectionObservers.forEach { observer -> handler.post { observer.onDisconnected() } }
         }
@@ -86,6 +87,7 @@ class MsToolkitConnection private constructor() : ServiceConnection {
     private fun nextReconnectDelay(): Long = RECONNECT_BASE_MS + Random().nextInt(RECONNECT_JITTER_MS).toLong()
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
         val instance = MsToolkitConnection()
 
         private const val TOOLKIT_ACTION = "com.syu.ms.toolkit"
