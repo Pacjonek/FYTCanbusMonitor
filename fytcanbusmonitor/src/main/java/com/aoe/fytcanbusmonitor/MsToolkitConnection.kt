@@ -21,8 +21,8 @@ class MsToolkitConnection private constructor() : ServiceConnection {
 
     private var context: Context? = null
     private var connecting = false
+    private val connectionObservers = ArrayList<IConnectionObserver>()
     private val handler = Handler(Looper.getMainLooper())
-    private val observers = ArrayList<IConnectionObserver>()
 
     private val reconnectRunnable = object : Runnable {
         override fun run() {
@@ -39,32 +39,32 @@ class MsToolkitConnection private constructor() : ServiceConnection {
     @Synchronized
     fun connect(context: Context?) = connect(context, 0L)
 
-    private fun connect(context: Context?, delayMillis: Long) {
+    private fun connect(context: Context?, timeoutMillis: Long) {
         if (connecting || remoteToolkit != null || context == null) return
         this.context = context.applicationContext
         connecting = true
-        handler.postDelayed(reconnectRunnable, delayMillis)
+        handler.postDelayed(reconnectRunnable, timeoutMillis)
     }
 
     @Synchronized
     fun addObserver(observer: IConnectionObserver) {
-        if (observer in observers) return
-        observers += observer
+        if (observer in connectionObservers) return
+        connectionObservers += observer
         remoteToolkit?.let { toolkit -> handler.post { observer.onConnected(toolkit) } }
     }
 
     @Synchronized
     fun removeObserver(observer: IConnectionObserver) {
-        observers -= observer
+        connectionObservers -= observer
         if (remoteToolkit != null) handler.post { observer.onDisconnected() }
     }
 
     @Synchronized
     fun clearObservers() {
         if (remoteToolkit != null) {
-            observers.forEach { observer -> handler.post { observer.onDisconnected() } }
+            connectionObservers.forEach { observer -> handler.post { observer.onDisconnected() } }
         }
-        observers.clear()
+        connectionObservers.clear()
     }
 
     @Synchronized
@@ -72,14 +72,14 @@ class MsToolkitConnection private constructor() : ServiceConnection {
         remoteToolkit = IRemoteToolkit.Stub.asInterface(service)
         val tool = remoteToolkit
         if (tool != null) {
-            observers.forEach { observer -> handler.post { observer.onConnected(tool) } }
+            connectionObservers.forEach { observer -> handler.post { observer.onConnected(tool) } }
         }
     }
 
     @Synchronized
     override fun onServiceDisconnected(name: ComponentName) {
         remoteToolkit = null
-        observers.forEach { observer -> handler.post { observer.onDisconnected() } }
+        connectionObservers.forEach { observer -> handler.post { observer.onDisconnected() } }
         connect(context, nextReconnectDelay())
     }
 

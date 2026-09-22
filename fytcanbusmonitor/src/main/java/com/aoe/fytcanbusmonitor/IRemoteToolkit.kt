@@ -15,21 +15,6 @@ interface IRemoteToolkit : IInterface {
     @Throws(RemoteException::class)
     fun getRemoteModule(moduleId: Int): IRemoteModule?
 
-    /*@Throws(RemoteException::class)
-    fun isMapApplication(i: Int): Int?
-
-    @Throws(RemoteException::class)
-    fun procName(i: Int): String?
-    
-    @Throws(RemoteException::class)
-    fun sendToSyuServiceAudioInformation(i: Int, ints: IntArray?, flts floatArray?, strs Array<String?>?): void
-
-    @Throws(RemoteException::class)
-    fun notify(moduleId: Int): void
-    */
-
-
-
     abstract class Stub : Binder(), IRemoteToolkit {
 
         init {
@@ -56,7 +41,7 @@ interface IRemoteToolkit : IInterface {
             }
         }
 
-        private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteToolkit {
+        private class Proxy(private val mRemote: IBinder) : IRemoteToolkit {
             override fun asBinder(): IBinder = mRemote
 
             @Throws(RemoteException::class)
@@ -79,12 +64,7 @@ interface IRemoteToolkit : IInterface {
         companion object {
             private const val DESCRIPTOR = "com.syu.ipc.IRemoteToolkit"
             const val TRANSACTION_getRemoteModule = 1
-            /*const val TRANSACTION_isMapApplication = 2;
-            const val TRANSACTION_procName = 3;
-            const val TRANSACTION_sendToSyuServiceAudioInformation = 4;
-            const val TRANSACTION_notify = 5;*/
-            
-            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
+            const val TRANSACTION_getDescriptor = IBinder.INTERFACE_TRANSACTION
 
             fun asInterface(obj: IBinder?): IRemoteToolkit? {
                 if (obj == null) return null

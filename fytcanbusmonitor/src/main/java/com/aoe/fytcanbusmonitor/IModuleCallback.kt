@@ -13,7 +13,7 @@ import android.os.RemoteException
 interface IModuleCallback : IInterface {
 
     @Throws(RemoteException::class)
-    fun update(updatedCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
+    fun update(updateCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
 
     abstract class Stub : Binder(), IModuleCallback {
 
@@ -39,15 +39,15 @@ interface IModuleCallback : IInterface {
             }
         }
 
-        private class Proxy internal constructor(private val mRemote: IBinder) : IModuleCallback {
+        private class Proxy(private val mRemote: IBinder) : IModuleCallback {
             override fun asBinder(): IBinder = mRemote
 
             @Throws(RemoteException::class)
-            override fun update(updatedCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
+            override fun update(updateCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
                 val data = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeInt(updatedCode)
+                    data.writeInt(updateCode)
                     data.writeIntArray(ints)
                     data.writeFloatArray(flts)
                     data.writeStringArray(strs)
@@ -62,6 +62,7 @@ interface IModuleCallback : IInterface {
             private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback"
             const val TRANSACTION_update = 1
             const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
+            const val FLAG_UPDATE_SYNC = 1
 
             fun asInterface(obj: IBinder?): IModuleCallback? {
                 if (obj == null) return null

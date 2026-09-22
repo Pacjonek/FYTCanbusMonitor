@@ -124,22 +124,22 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         } else null
     }
 
-    override fun register(callback: IModuleCallback?, updateCode: Int, update: Int) {
+    override fun register(updateListener: IModuleCallback?, updateCode: Int, update: Int) {
         val remoteModule = remoteModule
         if (remoteModule != null) {
             try {
-                remoteModule.register(callback, updateCode, update)
+                remoteModule.register(updateListener, updateCode, update)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
         }
     }
 
-    override fun unregister(callback: IModuleCallback?, updateCode: Int) {
+    override fun unregister(updateListener: IModuleCallback?, updateCode: Int) {
         val remoteModule = remoteModule
         if (remoteModule != null) {
             try {
-                remoteModule.unregister(callback, updateCode)
+                remoteModule.unregister(updateListener, updateCode)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
