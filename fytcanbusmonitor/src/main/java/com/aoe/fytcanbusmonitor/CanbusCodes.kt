@@ -97,8 +97,6 @@ object CanbusUpdateCodes {
     const val U_DOOR_BACK = 5
     const val U_DOOR_END = 6
 
-    const val U_AIR_BEGIN = 10;
-    const val U_AIR_BEGIN = 97;
 
 
     /**
@@ -371,7 +369,11 @@ object CanbusUpdateCodes {
     const val U_AIR_REAR_SEAT_BLOW_LEFT = 90
     const val U_AIR_REAR_SEAT_BLOW_RIGHT = 91
     const val U_AIR_FRONT_ONLY = 92
-    const val U_AIR_END = 93
+    const val U_AIR_MASSAGESEAT_LEFT = 93;
+    const val U_AIR_MASSAGESEAT_RIGHT = 94;
+    const val U_AIR_LUMBARSEAT_LEFT = 95;
+    const val U_AIR_LUMBARSEAT_RIGHT = 96;
+    const val U_AIR_END = 97
 
     /**
      * # Max limit
