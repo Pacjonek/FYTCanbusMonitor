@@ -19,10 +19,10 @@ interface IRemoteModule : IInterface {
     operator fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleObject?
 
     @Throws(RemoteException::class)
-    fun register(callback: IModuleCallback?, updateCode: Int, updateParam: Int)
+    fun register(updateListener: IModuleCallback?, updateCode: Int, syncFlag: Int)
 
     @Throws(RemoteException::class)
-    fun unregister(callback: IModuleCallback?, updateCode: Int)
+    fun unregister(updateListener: IModuleCallback?, updateCode: Int)
 
     abstract class Stub : Binder(), IRemoteModule {
 
@@ -72,8 +72,8 @@ interface IRemoteModule : IInterface {
             }
         }
 
-        private class Proxy internal constructor(private val mRemote: IBinder) : IRemoteModule {
-            override fun asBinder(): IBinder = mRemote
+        private class Proxy(private val module: IBinder) : IRemoteModule {
+            override fun asBinder(): IBinder = module
 
             @Throws(RemoteException::class)
             override fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
@@ -85,7 +85,7 @@ interface IRemoteModule : IInterface {
                     data.writeIntArray(ints)
                     data.writeFloatArray(flts)
                     data.writeStringArray(strs)
-                    mRemote.transact(TRANSACTION_cmd, data, reply, FLAG_ONEWAY)
+                    module.transact(TRANSACTION_cmd, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -103,7 +103,7 @@ interface IRemoteModule : IInterface {
                     data.writeIntArray(ints)
                     data.writeFloatArray(flts)
                     data.writeStringArray(strs)
-                    mRemote.transact(TRANSACTION_get, data, reply, 0)
+                    module.transact(TRANSACTION_get, data, reply, 0)
                     reply.readException()
                     if (reply.readInt() != 0) {
                         ModuleObject().apply {
@@ -121,15 +121,15 @@ interface IRemoteModule : IInterface {
             }
 
             @Throws(RemoteException::class)
-            override fun register(callback: IModuleCallback?, updateCode: Int, updateParam: Int) {
+            override fun register(updateListener: IModuleCallback?, updateCode: Int, syncFlag: Int) {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeStrongBinder(callback?.asBinder())
+                    data.writeStrongBinder(updateListener?.asBinder())
                     data.writeInt(updateCode)
-                    data.writeInt(updateParam)
-                    mRemote.transact(TRANSACTION_register, data, reply, FLAG_ONEWAY)
+                    data.writeInt(syncFlag)
+                    module.transact(TRANSACTION_register, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -138,14 +138,14 @@ interface IRemoteModule : IInterface {
             }
 
             @Throws(RemoteException::class)
-            override fun unregister(callback: IModuleCallback?, updateCode: Int) {
+            override fun unregister(updateListener: IModuleCallback?, updateCode: Int) {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeStrongBinder(callback?.asBinder())
+                    data.writeStrongBinder(updateListener?.asBinder())
                     data.writeInt(updateCode)
-                    mRemote.transact(TRANSACTION_unregister, data, reply, FLAG_ONEWAY)
+                    module.transact(TRANSACTION_unregister, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -160,7 +160,7 @@ interface IRemoteModule : IInterface {
             const val TRANSACTION_get = 2
             const val TRANSACTION_register = 3
             const val TRANSACTION_unregister = 4
-            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
+            const val TRANSACTION_getDescriptor = IBinder.INTERFACE_TRANSACTION
 
             fun asInterface(obj: IBinder?): IRemoteModule? {
                 if (obj == null) return null
