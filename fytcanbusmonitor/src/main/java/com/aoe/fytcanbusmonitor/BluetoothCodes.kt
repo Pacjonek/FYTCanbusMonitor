@@ -39,15 +39,30 @@ object BluetoothUpdateCodes {
     val U_RECORD = 35
     val U_UPDATE_PROGRESS = 36
 
-    var MUTE_MIC = 42
-    var PHONE_VOICE = 43
-    var PHONE_BATTERY = 44
-    var PHONE_SIGNAL = 45
-    var PHONE_OPERATOR = 46
-    var BLUETOOTH_CODING = 47
-    var ODB_DEV_CONNECTSTATE = 48
-    var PHONE_MESSAGE_HANDLE = 49
-    var PHONE_MESSAGE = 50
+    var U_MIC_MUTED = 42
+    var U_PHONE_VOICE = 43
+    var U_PHONE_BATTERY = 44 // [ints: 1-5]
+    var U_PHONE_SIGNAL = 45 // [ints: 1-5]
+    var U_PHONE_OPERATOR = 46
+    var U_BLUETOOTH_CODING = 47
+    var U_ODB_DEV_CONNECTSTATE = 48
+    var U_PHONE_MESSAGE_HANDLE = 49
+    var U_PHONE_MESSAGE = 50
+    var U_BTAV_ALBUM_IMG = 51
+    var U_BT_RECORD_5LIST = 52
+    var U_BT_NUMBER_NAME = 53
+    var U_CALLING_PIP_ENABLED = 55
+    var U_STOP_DOWNLOAD_BOOK = 56
+    var U_TERMINAL_CMD = 57
+    var U_BLE_STEER_DEV_STATE = 58
+    var U_TRANSFER = 59
+    var U_CALL_NUMBER = 60
+    var U_HFP_STATUS = 61
+    var U_A2DP_STATUS = 62
+    var U_WAITING_NUMBER = 63
+    var U_SUPPORT_MULTI = 64
+    var U_ANSWERING_DEVICE = 65
+    var U_DEVICES_INDEX_SWAP = 66
 
     val U_CNT_MAX = 256
 }
