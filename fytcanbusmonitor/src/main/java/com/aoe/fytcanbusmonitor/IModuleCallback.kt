@@ -61,12 +61,12 @@ interface IModuleCallback : IInterface {
         companion object {
             private const val DESCRIPTOR = "com.syu.ipc.IModuleCallback"
             const val TRANSACTION_update = 1
-            const val TRANSACTION_getDescriptor = Binder.INTERFACE_TRANSACTION;
+            const val TRANSACTION_getDescriptor = IBinder.INTERFACE_TRANSACTION
             const val FLAG_UPDATE_SYNC = 1
 
             fun asInterface(obj: IBinder?): IModuleCallback? {
                 if (obj == null) return null
-                return obj.queryLocalInterface(IModuleCallback.Stub.Companion.DESCRIPTOR) as? IModuleCallback ?: Proxy(obj)
+                return obj.queryLocalInterface(IModuleCallback.Stub.DESCRIPTOR) as? IModuleCallback ?: Proxy(obj)
             }
         }
     }

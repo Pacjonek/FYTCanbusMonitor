@@ -7,10 +7,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     var moduleType = -1
 
     override fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                remoteModule.cmd(cmdCode, ints, flts, strs)
+                module.cmd(cmdCode, ints, flts, strs)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -18,10 +18,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     }
 
     fun cmd(cmdCode: Int) {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                remoteModule.cmd(cmdCode, null, null, null)
+                module.cmd(cmdCode, null, null, null)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -29,10 +29,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     }
 
     fun cmd(cmdCode: Int, value: Int) {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                remoteModule.cmd(cmdCode, intArrayOf(value), null, null)
+                module.cmd(cmdCode, intArrayOf(value), null, null)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -40,10 +40,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     }
 
     fun cmd(cmdCode: Int, value1: Int, value2: Int) {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                remoteModule.cmd(cmdCode, intArrayOf(value1, value2), null, null)
+                module.cmd(cmdCode, intArrayOf(value1, value2), null, null)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -56,10 +56,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         flts: FloatArray?,
         strs: Array<String?>?
     ): ModuleObject? {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                return remoteModule[getCode, ints, flts, strs]
+                return module[getCode, ints, flts, strs]
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -68,10 +68,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     }
 
     operator fun get(getCode: Int, value: Int): ModuleObject? {
-        val remoteModule = remoteModule
-        return if (remoteModule != null) {
+        val module = remoteModule
+        return if (module != null) {
             try {
-                remoteModule[getCode, intArrayOf(value), null, null]
+                module[getCode, intArrayOf(value), null, null]
             } catch (e: RemoteException) {
                 e.printStackTrace()
                 null
@@ -79,26 +79,26 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         } else null
     }
 
-    fun getI(getCode: Int, valueIfNotOk: Int): Int {
-        val remoteModule = remoteModule
-        return if (remoteModule != null) {
+    fun getI(getCode: Int, fallbackValue: Int): Int {
+        val module = remoteModule
+        return if (module != null) {
             try {
-                val obj = remoteModule[getCode, null, null, null]
+                val obj = module[getCode, null, null, null]
                 if (obj?.ints != null && obj.ints!!.isNotEmpty()) {
                     obj.ints!![0]
-                } else valueIfNotOk
+                } else fallbackValue
             } catch (e: RemoteException) {
                 e.printStackTrace()
-                valueIfNotOk
+                fallbackValue
             }
-        } else valueIfNotOk
+        } else fallbackValue
     }
 
     fun getS(getCode: Int, value: Int): String? {
-        val remoteModule = remoteModule
-        return if (remoteModule != null) {
+        val module = remoteModule
+        return if (module != null) {
             try {
-                val obj = remoteModule[getCode, intArrayOf(value), null, null]
+                val obj = module[getCode, intArrayOf(value), null, null]
                 if (obj?.strs != null && obj.strs!!.isNotEmpty()) {
                     obj.strs!![0]
                 } else null
@@ -110,10 +110,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     }
 
     fun getS(getCode: Int, value1: Int, value2: Int): String? {
-        val remoteModule = remoteModule
-        return if (remoteModule != null) {
+        val module = remoteModule
+        return if (module != null) {
             try {
-                val obj = remoteModule[getCode, intArrayOf(value1, value2), null, null]
+                val obj = module[getCode, intArrayOf(value1, value2), null, null]
                 if (obj?.strs != null && obj.strs!!.isNotEmpty()) {
                     obj.strs!![0]
                 } else null
@@ -124,11 +124,11 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
         } else null
     }
 
-    override fun register(updateListener: IModuleCallback?, updateCode: Int, update: Int) {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+    override fun register(updateListener: IModuleCallback?, updateCode: Int, syncFlag: Int) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                remoteModule.register(updateListener, updateCode, update)
+                module.register(updateListener, updateCode, syncFlag)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
@@ -136,10 +136,10 @@ class RemoteModuleProxy : IRemoteModule.Stub() {
     }
 
     override fun unregister(updateListener: IModuleCallback?, updateCode: Int) {
-        val remoteModule = remoteModule
-        if (remoteModule != null) {
+        val module = remoteModule
+        if (module != null) {
             try {
-                remoteModule.unregister(updateListener, updateCode)
+                module.unregister(updateListener, updateCode)
             } catch (e: RemoteException) {
                 e.printStackTrace()
             }
