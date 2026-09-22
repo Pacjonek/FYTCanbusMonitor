@@ -226,6 +226,81 @@ object MainUpdateCodes {
     const val U_RESERVE = 30
     const val U_RESERVE2 = 44
 
+        const val U_AMBIENT_LIGHT = 123;
+        const val THIRD_DVR_SETUP = 124;
+        const val U_CAMERA_ALWAYS_POWER_SUPPLY = 125;
+        const val U_FRONT_CAMERA_ENABLE = 126;
+        const val U_LOCK_PASSWORD = 127;
+        const val U_UNLOCK_DEVICE_MAC = 128;
+        const val U_LOCK_STATE = 129;
+        const val STATIC_TRACK = 130;
+        const val U_LOCK_ENABLE = 131;
+        const val U_KEYCODE_2CUSTOMER = 132;
+        const val U_ONCLICK_KEYCODE = 133;
+        const val U_CAR_TURN = 134;
+        const val PREVIEW_MODE = 135;
+        const val U_LAMPLET_TIME = 136;
+        const val U_IMAGE_IC_INITED = 137;
+        const val TOP_APP_CHANGED = 138;
+        const val U_DOUBLE_FLASH = 139;
+        const val U_IMAGE_IC_UPGRADE = 140;
+        const val U_IMAGE_IC_UPGRADE_PROGRESS = 141;
+        const val U_MCU_SHUTDOWN_DELAY = 142;
+
+        const val U_FAN_AUTO_MODE = 144;
+        const val U_FAN_AUTO_MODE_TEMPS = 145;
+        const val U_CPU_RUNNING_TEMP = 146;
+        const val U_BOOT_PLAY_VIDEO = 147;
+        const val SOFT_UPGRADE = 148;
+        const val U_AMBIENT_LIGHT_SWITCH = 149;
+        const val U_APP_UI_WINDOW_FOCUS = 150;
+        const val U_DOOR_STATE = 151;
+
+        const val U_VIDEO_ID = 153;
+        const val U_VIDEO_FORMAT = 154;
+        const val U_VIDEO_SIGNAL = 155;
+        const val U_EXTRA_VOICE_AUDIO = 156;
+        const val U_EXTRA_NAVI_AUDIO = 157;
+        const val U_EXTRA_TIPS_AUDIO = 158;
+        const val EXTRA_CALLING = 159;
+        const val CAMERA_POWER = 160;
+        const val U_SET_PROPERTY = 161;
+        const val U_USB_DVR_SWITCH_7731 = 162;
+        const val U_SERIAL_PLUGIN_DEVICE = 163;
+        const val U_VOICE_PKG = 164;
+        const val U_ENTER_UI_REMEMBER = 165;
+        const val U_CARLINK_CARPLAY_CALLSTATE = 170;
+        const val U_CARLINK_WIRELESSED_AUTO_CONN = 166;
+        const val U_CARLINK_WIRED_AUTO_CONN = 167;
+        const val U_SCREEN_ON = 168;
+        const val U_REVERSE_CARPLAY_CONNECTED = 169;
+        const val U_CARLINK_CARPLAY_CALL_STATE = 170;
+        const val U_BACKLIGHT_CTRL_TYPE = 171;
+        const val U_EXTRA_MIC_ENABLE = 172;
+        const val U_CAR_VIDEO_SIZE = 173;
+        const val U_IMAGE_PARAM_8918 = 174;
+        const val U_SINGLE_DELAY_SHUTDOWN = 175;
+        const val U_OBSTACLE_FLAG = 176;
+        const val U_SCREENSAVER_OP = 177;
+        const val U_UI_MODE = 178;
+        const val U_LOCATION = 179;
+        const val U_REVERSE_ANTI_SHAKING = 180;
+        const val U_LAMPLET = 181;
+        const val U_MOBILE_LINK_STATUS = 182;
+        const val U_ALTITUDE_FIX_VALUE = 183;
+        const val U_ANDROID_AUDIO_STATE = 184;
+        const val U_CUSTOM_APP = 185;
+        const val U_APP_BE_KILLED = 186;
+        const val U_SECOND_DISPLAY_BRIGHTNESS = 187;
+        const val U_SECOND_DISPLAY_BLACK = 188;
+        const val U_BOOT_BLACK_SCREEN = 189;
+        const val U_CUSTOM_BOOT_APP = 190;
+        const val U_SECOND_BOOT_BLACK_SCREEN = 191;
+        const val U_SECOND_DISPLAY_VCOM_VOLTAGE = 192;
+        const val U_RIGHTCAMERA_7870_ONOFF = 199;
+        const val U_DEBUG_LOG_TYPE_FLAG = 201;
+    
+
     /**
      * # Max limit
      */
