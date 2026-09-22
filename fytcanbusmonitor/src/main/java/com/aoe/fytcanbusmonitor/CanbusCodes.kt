@@ -97,6 +97,10 @@ object CanbusUpdateCodes {
     const val U_DOOR_BACK = 5
     const val U_DOOR_END = 6
 
+    const val U_AIR_BEGIN = 10;
+    const val U_AIR_BEGIN = 97;
+
+
     /**
     * # "Proprietary" or not?
     */
