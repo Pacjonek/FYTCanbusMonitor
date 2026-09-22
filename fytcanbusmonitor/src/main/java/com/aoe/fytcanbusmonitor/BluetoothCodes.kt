@@ -130,8 +130,10 @@ object BluetoothOptions {
             var PHONE_MESSAGE_HANDLE = 49
             var PHONE_MESSAGE = 50
             var BTAV_ABLUME_IMG = 51
-            var C_BT_RECORD_5LIST = 52
-            var C_BT_NUMBER_NAME = 53
+            // C_
+            var BT_RECORD_5LIST = 52
+            // C_
+            var BT_NUMBER_NAME = 53
             var CALLING_PIP_ENABLE = 55
             var STOP_DOWNLOAD_BOOK = 56
             var TERMINAL_CMD = 57
