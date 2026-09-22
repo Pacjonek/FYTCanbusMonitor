@@ -70,7 +70,7 @@ object CanbusCommandCodes {
     const val C_CMD_TCROSS_ZH_BUTTON = 1039
 
     const val C_CMD_6606 = 1040
-    // const val C_,,, = 1041
+    // const val C_... = 1041
     const val C_DUDU_OBD = 1042
     const val C_KEYCODE_STUDY = 1043 // [0/1]
     
