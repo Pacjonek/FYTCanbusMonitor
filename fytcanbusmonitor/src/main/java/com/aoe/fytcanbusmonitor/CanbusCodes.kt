@@ -39,7 +39,7 @@ object CanbusCommandCodes {
 
     const val C_CMD_360_TOUCH = 1029
     const val C_CANBUS_FRAME_TO_MCU30 = 1030
-    const val C_PARK_CMDID = 1031
+    const val C_PARK_CMD = 1031
     const val C_CANBUSDVR_CMD = 1032
     /**
     *  val i0 = (iArr[0] >> 0) & 1)

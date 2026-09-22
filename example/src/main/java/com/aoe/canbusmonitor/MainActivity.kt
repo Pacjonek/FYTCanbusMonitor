@@ -48,11 +48,11 @@ class MainActivity : AppCompatActivity() {
     private fun loggingCallback(moduleCode: Long, moduleLabel: String) = object : IModuleCallback.Stub() {
         override fun update(
             updatedCode: Int,
-            intArray: IntArray?,
-            floatArray: FloatArray?,
-            strArray: Array<String?>?
+            ints: IntArray?,
+            flts: FloatArray?,
+            strs: Array<String?>?
         ) {
-            val values = formatPayloadValues(intArray, floatArray, strArray)
+            val values = formatPayloadValues(ints, flts, strs)
             logIfChanged(moduleCode, moduleLabel, updatedCode, values)
         }
     }

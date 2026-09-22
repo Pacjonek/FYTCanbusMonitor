@@ -11,20 +11,23 @@ import android.os.RemoteException
  * One instance per FYT module (MAIN = 0, BT = 2, CANBUS = 7, ...).
  */
 interface IRemoteModule : IInterface {
+    val moduleId: Int
 
     @Throws(RemoteException::class)
     fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
 
     @Throws(RemoteException::class)
-    operator fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleObject?
+    operator fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleMessage?
 
     @Throws(RemoteException::class)
-    fun register(callback: IModuleCallback?, updateCode: Int, updateParam: Int)
+    fun register(updateListener: IModuleCallback, updateCode: Int, syncFlag: Int)
 
     @Throws(RemoteException::class)
-    fun unregister(callback: IModuleCallback?, updateCode: Int)
+    fun unregister(updateListener: IModuleCallback, syncFlag: Int)
 
     abstract class Stub : Binder(), IRemoteModule {
+
+        override val moduleId: Int = -1
 
         init {
             attachInterface(this, DESCRIPTOR)
@@ -56,12 +59,12 @@ interface IRemoteModule : IInterface {
                 }
                 TRANSACTION_register -> {
                     data.enforceInterface(DESCRIPTOR)
-                    register(IModuleCallback.Stub.asInterface(data.readStrongBinder()), data.readInt(), data.readInt())
+                    register(IModuleCallback.Stub.asInterface(data.readStrongBinder())!!, data.readInt(), data.readInt())
                     true
                 }
                 TRANSACTION_unregister -> {
                     data.enforceInterface(DESCRIPTOR)
-                    unregister(IModuleCallback.Stub.asInterface(data.readStrongBinder()), data.readInt())
+                    unregister(IModuleCallback.Stub.asInterface(data.readStrongBinder())!!, data.readInt())
                     true
                 }
                 TRANSACTION_getDescriptor -> {
@@ -72,8 +75,9 @@ interface IRemoteModule : IInterface {
             }
         }
 
-        private class Proxy constructor(private val mRemote: IBinder) : IRemoteModule {
-            override fun asBinder(): IBinder = mRemote
+        private class Proxy(private val module: IBinder) : IRemoteModule {
+            override val moduleId: Int = -1
+            override fun asBinder(): IBinder = module
 
             @Throws(RemoteException::class)
             override fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?) {
@@ -85,7 +89,7 @@ interface IRemoteModule : IInterface {
                     data.writeIntArray(ints)
                     data.writeFloatArray(flts)
                     data.writeStringArray(strs)
-                    mRemote.transact(TRANSACTION_cmd, data, reply, FLAG_ONEWAY)
+                    module.transact(TRANSACTION_cmd, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -94,7 +98,7 @@ interface IRemoteModule : IInterface {
             }
 
             @Throws(RemoteException::class)
-            override fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleObject? {
+            override fun get(getCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?): ModuleMessage? {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
                 return try {
@@ -103,14 +107,10 @@ interface IRemoteModule : IInterface {
                     data.writeIntArray(ints)
                     data.writeFloatArray(flts)
                     data.writeStringArray(strs)
-                    mRemote.transact(TRANSACTION_get, data, reply, 0)
+                    module.transact(TRANSACTION_get, data, reply, 0)
                     reply.readException()
                     if (reply.readInt() != 0) {
-                        ModuleObject().apply {
-                            this.ints = reply.createIntArray()
-                            this.flts = reply.createFloatArray()!!
-                            this.strs = reply.createStringArray()
-                        }
+                        ModuleMessage(code = getCode, ints = reply.createIntArray(), flts = reply.createFloatArray(), strs = reply.createStringArray())
                     } else {
                         null
                     }
@@ -121,15 +121,15 @@ interface IRemoteModule : IInterface {
             }
 
             @Throws(RemoteException::class)
-            override fun register(callback: IModuleCallback?, updateCode: Int, updateParam: Int) {
+            override fun register(updateListener: IModuleCallback, updateCode: Int, syncFlag: Int) {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeStrongBinder(callback?.asBinder())
+                    data.writeStrongBinder(updateListener.asBinder())
                     data.writeInt(updateCode)
-                    data.writeInt(updateParam)
-                    mRemote.transact(TRANSACTION_register, data, reply, FLAG_ONEWAY)
+                    data.writeInt(syncFlag)
+                    module.transact(TRANSACTION_register, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
@@ -138,14 +138,14 @@ interface IRemoteModule : IInterface {
             }
 
             @Throws(RemoteException::class)
-            override fun unregister(callback: IModuleCallback?, updateCode: Int) {
+            override fun unregister(updateListener: IModuleCallback, syncFlag: Int) {
                 val data = Parcel.obtain()
                 val reply = Parcel.obtain()
                 try {
                     data.writeInterfaceToken(DESCRIPTOR)
-                    data.writeStrongBinder(callback?.asBinder())
-                    data.writeInt(updateCode)
-                    mRemote.transact(TRANSACTION_unregister, data, reply, FLAG_ONEWAY)
+                    data.writeStrongBinder(updateListener.asBinder())
+                    data.writeInt(syncFlag)
+                    module.transact(TRANSACTION_unregister, data, reply, FLAG_ONEWAY)
                     reply.readException()
                 } finally {
                     reply.recycle()
