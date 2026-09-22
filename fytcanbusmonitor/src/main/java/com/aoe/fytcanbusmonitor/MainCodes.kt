@@ -2,32 +2,32 @@ package com.aoe.fytcanbusmonitor
 
 object MainUpdateCodes {
 
-    const val U_POWER_ON = 0
-    const val U_VOL_MUTE = 1
-    const val U_VOL = 2
-    const val U_CHANNEL = 3
-    const val U_SYNCHRO_FLAG = 4
-    const val U_EXIST_DISC = 5
-    const val U_EXIST_IPOD = 6
-    const val U_EXIST_CDC = 7
-    const val U_NAVI_APP_PACKAGE_NAME = 8
-    const val U_ANY_KEY_BOOT = 9
-    const val U_HANDBRAKE_ENABLED = 10
-    const val U_HANDBRAKE_ON = 11
-    const val U_GPS_MIX_ON = 12
-    const val U_DEF_VOL_ON_BOOT = 13
+    // const val U_POWER_ON = 0
+    // const val U_VOL_MUTE = 1
+    // const val U_VOL = 2
+    // const val U_CHANNEL = 3
+    // const val U_SYNCHRO_FLAG = 4
+    // const val U_EXIST_DISC = 5
+    // const val U_EXIST_IPOD = 6
+    //n const val U_EXIST_CDC = 7
+    // const val U_NAVI_APP_PACKAGE_NAME = 8
+    // const val U_ANY_KEY_BOOT = 9
+    //const val U_HANDBRAKE_ENABLED = 10
+    //const val U_HANDBRAKE_ON = 11
+    //const val U_GPS_MIX_ON = 12
+    //const val U_DEF_VOL_ON_BOOT = 13
 
 
 
 
 
-    const val U_LAMPLET_ON = 19
-    const val U_BRIGHTNESS_DAY = 20
-    const val U_BRIGHTNESS_NIGHT = 21
-    const val U_AUTO_BLACKSCREEN_TIME = 22
-    const val U_MCU_VERSION = 23
+    // const val U_LAMPLET_ON = 19
+    // const val U_BRIGHTNESS_DAY = 20
+    // const val U_BRIGHTNESS_NIGHT = 21
+    // const val U_AUTO_BLACKSCREEN_TIME = 22
+    // const val U_MCU_VERSION = 23
 
-    const val U_PLAYER_TYPE = 25
+    /*const val U_PLAYER_TYPE = 25
     const val U_POWER_OPTION = 26
     const val U_PLAYER_CMD = 27
 
@@ -48,7 +48,7 @@ object MainUpdateCodes {
     const val U_STANDBY_ON = 43
     const val U_CANBUS_SUPPORT_CNT = 44
     const val U_VOL_MAIN_DEF = 45
-    const val U_RECENT_TASK = 46
+    const val U_RECENT_TASK = 46*/
 
     /**
      * # Power, System & Sleep state
@@ -57,7 +57,7 @@ object MainUpdateCodes {
     const val U_APP_ID = 0
     const val U_MCU_ON = 1
     const val U_STANDBY = 2
-    // const val U_ANY_KEY_BOOT = 5
+    const val U_ANY_KEY_BOOT = 5
     const val U_CUT_ACC_POWER = 25
     const val U_AUTO_BLACK_SCREEN = 36
     const val U_APP_VISIBILITY = 39
@@ -108,8 +108,8 @@ object MainUpdateCodes {
     /**
      * # Vehicle status & Telemetry
      */
-    // const val U_HANDBRAKE = 7
-    // const val U_HANDBRAKE_ENABLED = 8
+    const val U_HANDBRAKE = 7
+    const val U_HANDBRAKE_ENABLED = 8
     const val U_TEMP_OUT = 40
     const val U_STEER_ANGLE = 41
     const val U_TRUNK_CONTROL_STATE = 87
