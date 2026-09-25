@@ -81,7 +81,7 @@ object MainUpdateCodes {
     const val U_BRIGHT_LEVEL = 31
     const val U_BRIGHT_LEVEL_DAY = 32
     const val U_BRIGHT_LEVEL_NIGHT = 33
-    const val U_SCREEN_TOUCH_EVENT = 77
+    const val U_SCREEN_TOUCH_EVENT = 77 // [ints: x, y]
     const val U_STATUS_SCREENSHOTS_ENABLED = 117
 
     /**

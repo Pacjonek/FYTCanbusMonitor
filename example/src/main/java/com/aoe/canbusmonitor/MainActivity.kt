@@ -47,11 +47,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun loggingCallback(moduleCode: Long, moduleLabel: String) = object : IModuleCallback.Stub() {
         override fun update(
-            updatedCode: Int,
             ints: IntArray?,
             flts: FloatArray?,
-            strs: Array<String?>?
-        ) {
+            strs: Array<String?>?,
+            updatedCode: Int
+            ) {
             val values = formatPayloadValues(ints, flts, strs)
             logIfChanged(moduleCode, moduleLabel, updatedCode, values)
         }
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         strArray: Array<String?>?
     ): String {
         val intBitwiseArray = if (intArray?.any { it > 0 && it != (it and 255) } == true) {
-            intArray.map { it and 255 }.toIntArray()
+            intArray.map { it and 255 }
         } else {
             null
         }
