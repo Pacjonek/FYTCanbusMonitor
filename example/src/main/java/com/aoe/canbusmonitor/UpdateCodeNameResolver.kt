@@ -22,21 +22,23 @@ internal object UpdateCodeNameResolver {
     private val canbusUpdateCodeNames = buildCodeNameMap(CanbusUpdateCodes::class.java)
     private val resolvedLabels = ConcurrentHashMap<ModuleUpdateKey, String>()
 
-    fun resolve(moduleCode: Long, updateCode: Int): String? = when (moduleCode) {
-        MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updateCode]
-        MODULE_CODE_BT.toLong() -> bluetoothUpdateCodeNames[updateCode]
-        MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updateCode]
-        else -> null
+    fun resolve(moduleCode: Long, updateCode: Int): String? {
+        val moduleName = when (moduleCode) {
+            MODULE_CODE_MAIN.toLong() -> mainUpdateCodeNames[updateCode]
+            MODULE_CODE_BT.toLong() -> bluetoothUpdateCodeNames[updateCode]
+            MODULE_CODE_CANBUS.toLong() -> canbusUpdateCodeNames[updateCode]
+            else -> null
+        }
+        return if(moduleName != null){
+            "$updateCode:$moduleName"
+        } else {
+            null
+        }
     }
 
-    fun resolveOrFallback(moduleId: Long, updateCode: Int): String =
-        resolvedLabels.computeIfAbsent(cacheKey(moduleId, updateCode)) {
-            val moduleName = resolve(moduleId, updateCode)
-            if(moduleName == null){
-                updateCode.toString()
-            } else {
-                "$updateCode:$moduleName"
-            }
+    fun resolveOrFallback(moduleCode: Long, updateCode: Int): String =
+        resolvedLabels.computeIfAbsent(cacheKey(moduleCode, updateCode)) {
+            resolve(moduleCode, updateCode) ?: updateCode.toString()
         }
 
     fun resolve(moduleCode: Int, updatedCode: Int): String? =
