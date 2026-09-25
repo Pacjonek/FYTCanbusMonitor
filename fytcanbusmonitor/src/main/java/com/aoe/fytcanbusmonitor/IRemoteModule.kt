@@ -11,6 +11,7 @@ import android.os.RemoteException
  * One instance per FYT module (MAIN = 0, BT = 2, CANBUS = 7, ...).
  */
 interface IRemoteModule : IInterface {
+    val moduleId: Int
 
     @Throws(RemoteException::class)
     fun cmd(cmdCode: Int, ints: IntArray?, flts: FloatArray?, strs: Array<String?>?)
@@ -25,6 +26,8 @@ interface IRemoteModule : IInterface {
     fun unregister(updateListener: IModuleCallback?, updateCode: Int)
 
     abstract class Stub : Binder(), IRemoteModule {
+
+        override val moduleId: Int = -1
 
         init {
             attachInterface(this, DESCRIPTOR)
@@ -73,6 +76,7 @@ interface IRemoteModule : IInterface {
         }
 
         private class Proxy(private val module: IBinder) : IRemoteModule {
+            override val moduleId: Int = -1
             override fun asBinder(): IBinder = module
 
             @Throws(RemoteException::class)
