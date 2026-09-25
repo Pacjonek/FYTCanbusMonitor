@@ -34,15 +34,15 @@ object BluetoothUpdateCodes {
     const val U_AVRCP14_SUPPORT = 30
     const val U_BT_POWER_ON = 31
     const val U_MIC_LEVEL = 32
-    const val U_BTRING_PERCENT = 33
+    const val U_BT_RING_PERCENT = 33
     const val U_A2DP_SINK_STATE = 34
     const val U_RECORD = 35
     const val U_UPDATE_PROGRESS = 36
 
     const val U_MIC_MUTED = 42
     const val U_PHONE_VOICE = 43
-    const val U_PHONE_BATTERY = 44 // [ints: 1-5]
-    const val U_PHONE_SIGNAL = 45 // [ints: 1-5]
+    const val U_PHONE_BATTERY = 44 // [ints: 1..5]
+    const val U_PHONE_SIGNAL = 45 // [ints: 1..5]
     const val U_PHONE_OPERATOR = 46
     const val U_BLUETOOTH_CODING = 47
     const val U_ODB_DEV_CONNECTSTATE = 48
@@ -129,7 +129,7 @@ object BluetoothOptions {
             const val ODB_DEV_CONNECTSTATE = 48
             const val PHONE_MESSAGE_HANDLE = 49
             const val PHONE_MESSAGE = 50
-            const val BTAV_ABLUME_IMG = 51
+            const val BTAV_ALBUM_IMG = 51
             // C_
             const val BT_RECORD_5LIST = 52
             // C_
